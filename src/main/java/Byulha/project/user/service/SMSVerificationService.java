@@ -1,8 +1,8 @@
 package Byulha.project.user.service;
 
 import Byulha.project.global.generator.CodeGenerator;
-import Byulha.project.sms.model.dto.MessageDto;
-import Byulha.project.sms.service.NaverSMSService;
+import Byulha.project.naver.sms.model.dto.MessageDto;
+import Byulha.project.naver.sms.service.NaverSMSService;
 import Byulha.project.user.exception.AlreadyPhoneException;
 import Byulha.project.user.exception.NotSMSAuthorizedException;
 import Byulha.project.user.exception.NotSMSSentException;

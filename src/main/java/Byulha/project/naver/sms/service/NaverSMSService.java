@@ -1,8 +1,8 @@
-package Byulha.project.sms.service;
+package Byulha.project.naver.sms.service;
 
-import Byulha.project.sms.model.dto.MessageDto;
-import Byulha.project.sms.model.dto.RequestNaverCloudSMS;
-import Byulha.project.sms.model.dto.ResponseNaverCloudSMS;
+import Byulha.project.naver.sms.model.dto.RequestNaverCloudSMS;
+import Byulha.project.naver.sms.model.dto.ResponseNaverCloudSMS;
+import Byulha.project.naver.sms.model.dto.MessageDto;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;

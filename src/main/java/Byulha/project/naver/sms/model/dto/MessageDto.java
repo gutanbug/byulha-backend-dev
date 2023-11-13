@@ -1,4 +1,4 @@
-package Byulha.project.sms.model.dto;
+package Byulha.project.naver.sms.model.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
