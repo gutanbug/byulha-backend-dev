@@ -39,3 +39,4 @@ api.pdf
 
 ### VS Code ###
 .vscode/
+.DS_Store
