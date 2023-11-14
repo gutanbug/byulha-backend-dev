@@ -2,11 +2,13 @@ package Byulha.project.user.service;
 
 import Byulha.project.global.auth.jwt.AuthenticationToken;
 import Byulha.project.global.auth.jwt.JwtProvider;
+import Byulha.project.user.exception.AutoLoginUserNotFoundException;
 import Byulha.project.user.exception.UserNotFoundException;
 import Byulha.project.user.exception.WrongPasswordException;
 import Byulha.project.user.model.dto.AutoLoginDto;
 import Byulha.project.user.model.dto.request.RequestLoginDto;
 import Byulha.project.user.model.dto.response.ResponseLoginDto;
+import Byulha.project.user.model.dto.response.ResponseReissueDto;
 import Byulha.project.user.model.entity.User;
 import Byulha.project.user.repository.AutoLoginRepository;
 import Byulha.project.user.repository.UserRepository;
@@ -46,11 +48,11 @@ public class UserService {
         }
     }
 
-//    public ResponseReissueDto reissue(String refreshToken) {
-//        Instant now = Instant.now();
-//        AutoLoginDto autoLoginObj = autoLoginRepository.getAutoLoginPayload(refreshToken, AUTO_LOGIN_NAME, AutoLoginDto.class, now)
-//                .orElseThrow(AutoLoginUserNotFoundException::new);
-//        AuthenticationToken token = jwtProvider.reissue(autoLoginObj.getUserId(), autoLoginObj.getUserRole());
-//        return new ResponseReissueDto(token.getAccessToken());
-//    }
+    public ResponseReissueDto reissue(String refreshToken) {
+        Instant now = Instant.now();
+        AutoLoginDto autoLoginObj = autoLoginRepository.getAutoLoginPayload(refreshToken, AUTO_LOGIN_NAME, AutoLoginDto.class, now)
+                .orElseThrow(AutoLoginUserNotFoundException::new);
+        AuthenticationToken token = jwtProvider.reissue(autoLoginObj.getUserId(), autoLoginObj.getUserRole());
+        return new ResponseReissueDto(token.getAccessToken());
+    }
 }

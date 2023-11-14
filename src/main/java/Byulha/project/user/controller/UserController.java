@@ -1,16 +1,24 @@
 package Byulha.project.user.controller;
 
+import Byulha.project.global.auth.role.UserAuth;
+import Byulha.project.user.model.dto.request.RequestWithPhoneNumberDto;
 import Byulha.project.user.model.dto.request.RequestLoginDto;
+import Byulha.project.user.model.dto.request.RequestReissueDto;
 import Byulha.project.user.model.dto.request.RequestSignupDto;
 import Byulha.project.user.model.dto.response.ResponseLoginDto;
+import Byulha.project.user.model.dto.response.ResponseReissueDto;
 import Byulha.project.user.model.dto.response.ResponseSignupTokenDto;
 import Byulha.project.user.service.SignupService;
+import Byulha.project.user.service.UserFindService;
 import Byulha.project.user.service.UserService;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 
 @Tag(name = "사용자", description = "사용자 관련 api")
 @RestController
@@ -20,12 +28,13 @@ import javax.validation.Valid;
 public class UserController {
 
     private final UserService userService;
+    private final UserFindService userFindService;
     private final SignupService signupService;
 
     /**
      * 회원가입 토큰 생성
      *
-     * @return 회원가입 토큰
+     * @return              회원가입 토큰
      */
     @GetMapping("/signup-token")
     public ResponseSignupTokenDto generateSignupToken() {
@@ -55,15 +64,26 @@ public class UserController {
         return userService.login(dto);
     }
 
-//    /**
-//     * 토큰 재발급
-//     *
-//     * @param dto           요청 body
-//     * @return              새로 발급된 토큰
-//     */
-//    @UserAuth
-//    @PostMapping("/reissue")
-//    public ResponseReissueDto reissue(@Valid @RequestBody RequestReissueDto dto) {
-//        return userService.reissue(dto.getRefreshToken());
-//    }
+    /**
+     * 토큰 재발급
+     *
+     * @param dto           요청 body
+     * @return              새로 발급된 토큰
+     */
+    @UserAuth
+    @PostMapping("/reissue")
+    public ResponseReissueDto reissue(@Valid @RequestBody RequestReissueDto dto) {
+        return userService.reissue(dto.getRefreshToken());
+    }
+
+    /**
+     * 닉네임(아이디) 찾기
+     * SMS로 닉네임을 전송합니다.
+     *
+     * @param dto           요청 body
+     */
+    @PostMapping("/find/nickname")
+    public void findNicknameBySMS(@Valid @RequestBody RequestWithPhoneNumberDto dto) throws NoSuchAlgorithmException, InvalidKeyException, JsonProcessingException {
+        userFindService.sendNicknameBySMS(dto.getPhoneNumber());
+    }
 }
