@@ -43,7 +43,7 @@ jobs:
     runs-on: ubuntu-latest
     if: github.repository == 'SixPieceGarlicBread/byulha-backend-dev'
     needs: check_repo
-    environment: dev
+    environment: main
     steps:
     - uses: actions/checkout@v3
     
