@@ -36,7 +36,7 @@ public class SMSVerificationService {
     public static final String SMS_AUTH_COMPLETE_SIGN = "OK";
 
 
-    private final Clock clock;
+    private Clock clock;
     private final MessageSource messageSource;
     private final NaverSMSService smsService;
     private final UserRepository userRepository;
