@@ -25,7 +25,7 @@ import java.util.Map;
                 description = "타바 프로젝트 - AI 이미지 분석 개발서버 API 제공"
         ),
         servers = {
-                @Server(url = "도메인", description = "개발 서버"),
+                @Server(url = "https://byulha.life/api", description = "개발 서버"),
                 @Server(url = "/", description = "로컬 서버")
         }
 )
