@@ -18,7 +18,7 @@ import java.time.Clock;
 public class WebConfig implements WebMvcConfigurer {
 
     @Value("${app.cors}")
-    private final String corsList;
+    private String corsList;
 
     private final VoidSuccessResponseInterceptor vsrInterceptor;
 
