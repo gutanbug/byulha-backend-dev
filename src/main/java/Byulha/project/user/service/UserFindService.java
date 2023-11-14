@@ -29,7 +29,7 @@ public class UserFindService {
         phone = eliminateDash(phone);
         User user = userRepository.findByPhone(phone).orElseThrow(UserNotFoundException::new);
         String username = user.getNickname();
-        sendSMS(phone, "sms.find.id-message", username);
+        sendSMS(phone, "sms.find.nickname-message", username);
     }
 
     private void sendSMS(String phone, String messageCode, String argument) throws NoSuchAlgorithmException, InvalidKeyException, JsonProcessingException {
