@@ -1,5 +1,3 @@
-WORKDIR /usr/app/
-
 COPY build/libs/*.jar application.jar
 
 EXPOSE 8080
