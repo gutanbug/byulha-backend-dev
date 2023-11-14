@@ -1,8 +1,11 @@
 package Byulha.project.user.controller;
 
+import Byulha.project.global.auth.role.UserAuth;
 import Byulha.project.user.model.dto.request.RequestLoginDto;
+import Byulha.project.user.model.dto.request.RequestReissueDto;
 import Byulha.project.user.model.dto.request.RequestSignupDto;
 import Byulha.project.user.model.dto.response.ResponseLoginDto;
+import Byulha.project.user.model.dto.response.ResponseReissueDto;
 import Byulha.project.user.model.dto.response.ResponseSignupTokenDto;
 import Byulha.project.user.service.SignupService;
 import Byulha.project.user.service.UserService;
@@ -55,15 +58,15 @@ public class UserController {
         return userService.login(dto);
     }
 
-//    /**
-//     * 토큰 재발급
-//     *
-//     * @param dto           요청 body
-//     * @return              새로 발급된 토큰
-//     */
-//    @UserAuth
-//    @PostMapping("/reissue")
-//    public ResponseReissueDto reissue(@Valid @RequestBody RequestReissueDto dto) {
-//        return userService.reissue(dto.getRefreshToken());
-//    }
+    /**
+     * 토큰 재발급
+     *
+     * @param dto           요청 body
+     * @return              새로 발급된 토큰
+     */
+    @UserAuth
+    @PostMapping("/reissue")
+    public ResponseReissueDto reissue(@Valid @RequestBody RequestReissueDto dto) {
+        return userService.reissue(dto.getRefreshToken());
+    }
 }
