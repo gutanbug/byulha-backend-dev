@@ -13,6 +13,7 @@ import Byulha.project.user.repository.SignupAuthRepository;
 import Byulha.project.user.repository.UserRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -35,8 +36,7 @@ public class SMSVerificationService {
     public static final String SMS_AUTH_NAME = "sms";
     public static final String SMS_AUTH_COMPLETE_SIGN = "OK";
 
-
-    private Clock clock;
+    private final Clock clock;
     private final MessageSource messageSource;
     private final NaverSMSService smsService;
     private final UserRepository userRepository;
