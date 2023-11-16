@@ -1,16 +1,23 @@
 package Byulha.project.user.controller;
 
+import Byulha.project.global.auth.role.UserAuth;
 import Byulha.project.user.model.dto.request.RequestLoginDto;
+import Byulha.project.user.model.dto.request.RequestReissueDto;
 import Byulha.project.user.model.dto.request.RequestSignupDto;
 import Byulha.project.user.model.dto.response.ResponseLoginDto;
+import Byulha.project.user.model.dto.response.ResponseReissueDto;
 import Byulha.project.user.model.dto.response.ResponseSignupTokenDto;
 import Byulha.project.user.service.SignupService;
+import Byulha.project.user.service.UserFindService;
 import Byulha.project.user.service.UserService;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 
 @Tag(name = "사용자", description = "사용자 관련 api")
 @RestController
@@ -21,6 +28,7 @@ public class UserController {
 
     private final UserService userService;
     private final SignupService signupService;
+    private final UserFindService userFindService;
 
     /**
      * 회원가입 토큰 생성
@@ -57,15 +65,23 @@ public class UserController {
         return userService.login(dto);
     }
 
-//    /**
-//     * 토큰 재발급
-//     *
-//     * @param dto           요청 body
-//     * @return              새로 발급된 토큰
-//     */
-//    @UserAuth
-//    @PostMapping("/reissue")
-//    public ResponseReissueDto reissue(@Valid @RequestBody RequestReissueDto dto) {
-//        return userService.reissue(dto.getRefreshToken());
-//    }
+    /**
+     * 토큰 재발급
+     *
+     * @param dto           요청 body
+     * @return              새로 발급된 토큰
+     */
+    @UserAuth
+    @PostMapping("/reissue")
+    public ResponseReissueDto reissue(@Valid @RequestBody RequestReissueDto dto) {
+        return userService.reissue(dto.getRefreshToken());
+    }
+
+    /**
+     * SMS로 회원 닉네임(아이디)을 전송합니다.
+     */
+    @PostMapping("/find/nickname")
+    public void sendNicknameBySMS(@RequestParam String phone) throws NoSuchAlgorithmException, InvalidKeyException, JsonProcessingException {
+        userFindService.sendNicknameBySMS(phone);
+    }
 }
