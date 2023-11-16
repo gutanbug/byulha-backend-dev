@@ -26,4 +26,7 @@ public interface UserRepository extends JpaRepository<User, Long> , JpaSpecifica
             + "and u.lastModifiedAt <= :inactiveDate " +
             "and u.id != :defaultUserId")
     List<User> findAllWithDeleted(@Param("inactiveDate") LocalDateTime inactiveDate,@Param("defaultUserId") Long defaultUserId);
+
+    @Query("select u from User u where u.status = 'INACTIVE' and u.nickname = :nickname")
+    Optional<User> findByInactiveByNickname(String nickname);
 }
