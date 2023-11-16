@@ -46,6 +46,8 @@ public class UserController {
      *
      * @param dto           요청 body
      * @param signupToken   회원가입 토큰
+     *
+     * 새로운 유저가 회원가입하거나 상태가 INACTIVE인 유저가 회원가입을 할 때 사용됩니다.
      */
     @PostMapping("/{signup-token}")
     public void signup(@Valid @RequestBody RequestSignupDto dto,
