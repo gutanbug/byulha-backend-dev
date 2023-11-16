@@ -82,7 +82,6 @@ public class UserController {
      *
      * @param phone         전화번호
      */
-
     @PostMapping("/find/nickname")
     public void sendNicknameBySMS(@RequestParam String phone) throws NoSuchAlgorithmException, InvalidKeyException, JsonProcessingException {
         userFindService.sendNicknameBySMS(phone);
