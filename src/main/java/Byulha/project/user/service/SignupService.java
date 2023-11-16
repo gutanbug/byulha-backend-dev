@@ -35,18 +35,26 @@ public class SignupService {
         String phone = smsVerificationService.getPhoneNumber(signupToken);
         String encryptedPassword = passwordEncoder.encode(dto.getPassword());
 
-//        Optional<User> inactiveUser = userRepository.findByInactiveByNickname(dto.getNickname());
-        //TODO 회원탈퇴 로직이 필요할 시 구현
+        Optional<User> inactiveUser = userRepository.findByInactiveByNickname(dto.getNickname());
 
-        User user = User.builder()
-                .name(dto.getName())
-                .nickname(dto.getNickname())
-                .password(encryptedPassword)
-                .phone(phone)
-                .userRole(UserRole.USER)
-                .status(UserStatus.ACTIVE)
-                .build();
-        userRepository.save(user);
+        if (inactiveUser.isPresent()) {
+            User user = inactiveUser.get();
+            user.changeStatus(UserStatus.ACTIVE);
+            user.changeName(dto.getName());
+            user.changeNickname(dto.getNickname());
+            user.changePhone(phone);
+            user.changePassword(encryptedPassword);
+        } else{
+            User user = User.builder()
+                    .name(dto.getName())
+                    .nickname(dto.getNickname())
+                    .password(encryptedPassword)
+                    .phone(phone)
+                    .userRole(UserRole.USER)
+                    .status(UserStatus.ACTIVE)
+                    .build();
+            userRepository.save(user);
+        }
 
         deleteSignupAuths(signupToken);
     }
