@@ -66,6 +66,42 @@ public class User extends BaseEntity {
     }
 
     /**
+     * 이름을 변경합니다.
+     *
+     * @param name 이름
+     */
+    public void changeName(String name) {
+        this.name = name;
+    }
+
+    /**
+     * 닉네임(아이디)을 변경합니다.
+     *
+     * @param nickname 닉네임(아이디)
+     */
+    public void changeNickname(String nickname) {
+        this.nickname = nickname;
+    }
+
+    /**
+     * 비밀번호를 변경합니다.
+     *
+     * @param encodedPassword 인코딩된 비밀번호
+     */
+    public void changePassword(String encodedPassword) {
+        this.password = encodedPassword;
+    }
+
+    /**
+     * 휴대폰 번호를 변경합니다.
+     *
+     * @param phone 휴대폰번호
+     */
+    public void changePhone(String phone) {
+        this.phone = phone;
+    }
+
+    /**
      * Dummy 회원의 값으로 변경하기 위해서 null로 만듭니다.
      */
     public void emptyOutUserInfo() {
