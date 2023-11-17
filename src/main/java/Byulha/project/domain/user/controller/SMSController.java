@@ -1,8 +1,8 @@
-package Byulha.project.user.controller;
+package Byulha.project.domain.user.controller;
 
-import Byulha.project.user.model.dto.request.RequestPhoneNumberDto;
-import Byulha.project.user.model.dto.request.RequestVerifySMSCodeDto;
-import Byulha.project.user.service.SMSVerificationService;
+import Byulha.project.domain.user.model.dto.request.RequestPhoneNumberDto;
+import Byulha.project.domain.user.model.dto.request.RequestVerifySMSCodeDto;
+import Byulha.project.domain.user.service.SMSVerificationService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;

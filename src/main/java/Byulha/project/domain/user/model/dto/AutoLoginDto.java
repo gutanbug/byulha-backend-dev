@@ -1,4 +1,4 @@
-package Byulha.project.user.model.dto;
+package Byulha.project.domain.user.model.dto;
 
 import Byulha.project.global.auth.role.UserRole;
 import lombok.Getter;

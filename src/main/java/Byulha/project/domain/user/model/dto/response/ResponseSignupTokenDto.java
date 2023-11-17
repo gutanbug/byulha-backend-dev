@@ -1,4 +1,4 @@
-package Byulha.project.user.model.dto.response;
+package Byulha.project.domain.user.model.dto.response;
 
 import lombok.Getter;
 

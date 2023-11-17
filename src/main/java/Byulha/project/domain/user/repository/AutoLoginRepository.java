@@ -1,4 +1,4 @@
-package Byulha.project.user.repository;
+package Byulha.project.domain.user.repository;
 
 import java.time.Instant;
 import java.util.Optional;

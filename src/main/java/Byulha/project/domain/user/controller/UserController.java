@@ -1,20 +1,22 @@
-package Byulha.project.user.controller;
+package Byulha.project.domain.user.controller;
 
+import Byulha.project.domain.user.model.dto.request.RequestReissueDto;
+import Byulha.project.domain.user.model.dto.request.RequestSignupDto;
+import Byulha.project.domain.user.model.dto.response.ResponseLoginDto;
+import Byulha.project.domain.user.model.dto.response.ResponseReissueDto;
+import Byulha.project.domain.user.model.dto.response.ResponseUserInfoDto;
+import Byulha.project.domain.user.service.SignupService;
+import Byulha.project.domain.user.service.UserFindService;
+import Byulha.project.domain.user.service.UserService;
 import Byulha.project.global.auth.jwt.AppAuthentication;
 import Byulha.project.global.auth.role.UserAuth;
-import Byulha.project.user.model.dto.request.RequestLoginDto;
-import Byulha.project.user.model.dto.request.RequestReissueDto;
-import Byulha.project.user.model.dto.request.RequestSignupDto;
-import Byulha.project.user.model.dto.response.ResponseLoginDto;
-import Byulha.project.user.model.dto.response.ResponseReissueDto;
-import Byulha.project.user.model.dto.response.ResponseSignupTokenDto;
-import Byulha.project.user.model.dto.response.ResponseUserInfoDto;
-import Byulha.project.user.service.SignupService;
-import Byulha.project.user.service.UserFindService;
-import Byulha.project.user.service.UserService;
+import Byulha.project.domain.user.model.dto.request.RequestLoginDto;
+import Byulha.project.domain.user.model.dto.response.ResponseSignupTokenDto;
+import Byulha.project.infra.s3.model.dto.request.RequestUploadFileDto;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -100,5 +102,20 @@ public class UserController {
     @PostMapping("/find/nickname")
     public void sendNicknameBySMS(@RequestParam String phone) throws NoSuchAlgorithmException, InvalidKeyException, JsonProcessingException {
         userFindService.sendNicknameBySMS(phone);
+    }
+
+    /**
+     * 이미지 업로드
+     *
+     * AWS S3에 사용자가 원하는 이미지를 업로드합니다.
+     *
+     * @param auth         인증 정보
+     * @param dto          요청 body
+     */
+    @UserAuth
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE, value = "/upload/image")
+    public void uploadImage(AppAuthentication auth,
+                            @Valid @ModelAttribute RequestUploadFileDto dto) {
+        userService.uploadImage(auth.getUserId(), dto);
     }
 }

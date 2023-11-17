@@ -1,4 +1,4 @@
-package Byulha.project.user.model;
+package Byulha.project.domain.user.model;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

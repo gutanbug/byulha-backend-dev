@@ -1,14 +1,14 @@
-package Byulha.project.user.service;
+package Byulha.project.domain.user.service;
 
+import Byulha.project.domain.user.model.UserStatus;
+import Byulha.project.domain.user.model.dto.request.RequestSignupDto;
 import Byulha.project.global.auth.role.UserRole;
 import Byulha.project.global.generator.SignupTokenGenerator;
-import Byulha.project.user.exception.AlreadyNameException;
-import Byulha.project.user.exception.AlreadyNicknameException;
-import Byulha.project.user.model.UserStatus;
-import Byulha.project.user.model.dto.request.RequestSignupDto;
-import Byulha.project.user.model.dto.response.ResponseSignupTokenDto;
-import Byulha.project.user.model.entity.User;
-import Byulha.project.user.repository.UserRepository;
+import Byulha.project.domain.user.exception.AlreadyNameException;
+import Byulha.project.domain.user.exception.AlreadyNicknameException;
+import Byulha.project.domain.user.model.dto.response.ResponseSignupTokenDto;
+import Byulha.project.domain.user.model.entity.User;
+import Byulha.project.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;

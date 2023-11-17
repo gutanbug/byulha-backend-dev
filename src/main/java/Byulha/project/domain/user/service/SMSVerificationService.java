@@ -1,16 +1,16 @@
-package Byulha.project.user.service;
+package Byulha.project.domain.user.service;
 
+import Byulha.project.domain.user.exception.AlreadyPhoneException;
+import Byulha.project.domain.user.model.SMSAuth;
 import Byulha.project.global.generator.CodeGenerator;
 import Byulha.project.infra.naver.sms.model.dto.MessageDto;
 import Byulha.project.infra.naver.sms.service.NaverSMSService;
-import Byulha.project.user.exception.AlreadyPhoneException;
-import Byulha.project.user.exception.NotSMSAuthorizedException;
-import Byulha.project.user.exception.NotSMSSentException;
-import Byulha.project.user.exception.WrongSMSCodeException;
-import Byulha.project.user.model.SMSAuth;
-import Byulha.project.user.model.entity.User;
-import Byulha.project.user.repository.SignupAuthRepository;
-import Byulha.project.user.repository.UserRepository;
+import Byulha.project.domain.user.exception.NotSMSAuthorizedException;
+import Byulha.project.domain.user.exception.NotSMSSentException;
+import Byulha.project.domain.user.exception.WrongSMSCodeException;
+import Byulha.project.domain.user.model.entity.User;
+import Byulha.project.domain.user.repository.SignupAuthRepository;
+import Byulha.project.domain.user.repository.UserRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;

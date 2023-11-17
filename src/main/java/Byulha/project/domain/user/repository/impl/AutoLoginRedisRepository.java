@@ -1,8 +1,8 @@
-package Byulha.project.user.repository.impl;
+package Byulha.project.domain.user.repository.impl;
 
 import Byulha.project.global.config.redis.AbstractKeyValueCacheRepository;
 import Byulha.project.global.config.redis.RedisKeys;
-import Byulha.project.user.repository.AutoLoginRepository;
+import Byulha.project.domain.user.repository.AutoLoginRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.StringRedisTemplate;

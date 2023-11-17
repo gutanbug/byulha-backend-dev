@@ -1,4 +1,4 @@
-package Byulha.project.user.exception;
+package Byulha.project.domain.user.exception;
 
 import Byulha.project.global.error.exception.LocalizedMessageException;
 import Byulha.project.global.error.model.FieldErrorResult;

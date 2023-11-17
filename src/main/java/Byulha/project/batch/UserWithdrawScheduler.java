@@ -1,7 +1,7 @@
 package Byulha.project.batch;
 
-import Byulha.project.user.model.entity.User;
-import Byulha.project.user.repository.UserRepository;
+import Byulha.project.domain.user.model.entity.User;
+import Byulha.project.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;

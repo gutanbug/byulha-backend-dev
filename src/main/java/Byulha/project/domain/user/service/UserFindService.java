@@ -1,10 +1,10 @@
-package Byulha.project.user.service;
+package Byulha.project.domain.user.service;
 
+import Byulha.project.domain.user.exception.UserNotFoundException;
 import Byulha.project.infra.naver.sms.model.dto.MessageDto;
 import Byulha.project.infra.naver.sms.service.NaverSMSService;
-import Byulha.project.user.exception.UserNotFoundException;
-import Byulha.project.user.model.entity.User;
-import Byulha.project.user.repository.UserRepository;
+import Byulha.project.domain.user.model.entity.User;
+import Byulha.project.domain.user.repository.UserRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.MessageSource;

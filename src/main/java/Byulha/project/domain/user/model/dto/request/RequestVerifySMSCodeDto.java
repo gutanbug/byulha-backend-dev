@@ -1,4 +1,4 @@
-package Byulha.project.user.model.dto.request;
+package Byulha.project.domain.user.model.dto.request;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;

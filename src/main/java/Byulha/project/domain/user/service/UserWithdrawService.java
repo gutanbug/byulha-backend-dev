@@ -1,13 +1,12 @@
-package Byulha.project.user.service;
+package Byulha.project.domain.user.service;
 
-import Byulha.project.user.exception.UserNotFoundException;
-import Byulha.project.user.model.entity.User;
-import Byulha.project.user.repository.UserRepository;
+import Byulha.project.domain.user.exception.UserNotFoundException;
+import Byulha.project.domain.user.model.UserStatus;
+import Byulha.project.domain.user.model.entity.User;
+import Byulha.project.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import static Byulha.project.user.model.UserStatus.INACTIVE;
 
 @Service
 @RequiredArgsConstructor
@@ -18,6 +17,6 @@ public class UserWithdrawService {
     @Transactional
     public void withdraw(Long userId) {
         User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
-        user.changeStatus(INACTIVE);
+        user.changeStatus(UserStatus.INACTIVE);
     }
 }

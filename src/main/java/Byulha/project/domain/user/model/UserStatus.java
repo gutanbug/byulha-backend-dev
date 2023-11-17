@@ -1,4 +1,4 @@
-package Byulha.project.user.model;
+package Byulha.project.domain.user.model;
 
 public enum UserStatus {
     /**

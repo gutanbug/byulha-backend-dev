@@ -1,6 +1,6 @@
-package Byulha.project.user.repository;
+package Byulha.project.domain.user.repository;
 
-import Byulha.project.user.model.entity.User;
+import Byulha.project.domain.user.model.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;

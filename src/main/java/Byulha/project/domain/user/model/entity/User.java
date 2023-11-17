@@ -1,9 +1,9 @@
-package Byulha.project.user.model.entity;
+package Byulha.project.domain.user.model.entity;
 
+import Byulha.project.domain.user.model.UserStatus;
 import Byulha.project.global.auth.role.UserRole;
 import Byulha.project.global.base.BaseEntity;
 import Byulha.project.infra.s3.model.ImageFile;
-import Byulha.project.user.model.UserStatus;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;

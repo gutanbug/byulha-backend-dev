@@ -1,7 +1,7 @@
-package Byulha.project.user.model.dto.response;
+package Byulha.project.domain.user.model.dto.response;
 
 import Byulha.project.global.auth.jwt.AuthenticationToken;
-import Byulha.project.user.model.entity.User;
+import Byulha.project.domain.user.model.entity.User;
 import lombok.Getter;
 
 @Getter
