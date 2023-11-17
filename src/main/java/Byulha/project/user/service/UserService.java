@@ -9,6 +9,7 @@ import Byulha.project.user.model.dto.AutoLoginDto;
 import Byulha.project.user.model.dto.request.RequestLoginDto;
 import Byulha.project.user.model.dto.response.ResponseLoginDto;
 import Byulha.project.user.model.dto.response.ResponseReissueDto;
+import Byulha.project.user.model.dto.response.ResponseUserInfoDto;
 import Byulha.project.user.model.entity.User;
 import Byulha.project.user.repository.AutoLoginRepository;
 import Byulha.project.user.repository.UserRepository;
@@ -18,6 +19,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.servlet.http.HttpServletRequest;
 import java.time.Instant;
 
 @Service
@@ -48,11 +50,16 @@ public class UserService {
         }
     }
 
-    public ResponseReissueDto reissue(String refreshToken) {
-        Instant now = Instant.now();
-        AutoLoginDto autoLoginObj = autoLoginRepository.getAutoLoginPayload(refreshToken, AUTO_LOGIN_NAME, AutoLoginDto.class, now)
-                .orElseThrow(AutoLoginUserNotFoundException::new);
-        AuthenticationToken token = jwtProvider.reissue(autoLoginObj.getUserId(), autoLoginObj.getUserRole());
-        return new ResponseReissueDto(token.getAccessToken());
+    public ResponseReissueDto reissue(HttpServletRequest request, String refreshToken) {
+        String accessToken = jwtProvider.getAccessTokenFromHeader(request);
+        AuthenticationToken token = jwtProvider.reissue(accessToken, refreshToken);
+        return new ResponseReissueDto(token);
+    }
+
+    public ResponseUserInfoDto getUserInfo(Long userId) {
+        User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
+
+        return new ResponseUserInfoDto(user.getName(), user.getNickname(),
+                user.getPhone(), user.getAge(), user.getSex(), user.getUserRole().isAdmin());
     }
 }
