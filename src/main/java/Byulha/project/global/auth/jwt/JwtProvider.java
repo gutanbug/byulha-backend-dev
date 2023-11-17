@@ -4,7 +4,7 @@ import Byulha.project.global.auth.role.UserRole;
 import Byulha.project.global.error.exception.ExpiredTokenException;
 import Byulha.project.global.error.exception.IllegalTokenTypeException;
 import Byulha.project.global.error.exception.InvalidTokenException;
-import Byulha.project.user.model.entity.User;
+import Byulha.project.domain.user.model.entity.User;
 import io.jsonwebtoken.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
