@@ -1,7 +1,9 @@
 package Byulha.project.domain.user.service;
 
+import Byulha.project.domain.user.exception.ImageNotFoundException;
 import Byulha.project.domain.user.exception.UserNotFoundException;
 import Byulha.project.domain.user.exception.WrongPasswordException;
+import Byulha.project.domain.user.model.dto.request.RequestDeleteImageDto;
 import Byulha.project.domain.user.model.dto.response.ResponseLoginDto;
 import Byulha.project.domain.user.model.dto.response.ResponseReissueDto;
 import Byulha.project.domain.user.model.dto.response.ResponseUserInfoDto;
@@ -89,5 +91,12 @@ public class UserService {
             imageFiles.add(builder.build());
         }
         imageFileRepository.saveAll(imageFiles);
+    }
+
+    @Transactional
+    public void deleteImage(Long userId, RequestDeleteImageDto dto) {
+        ImageFile imageFile = imageFileRepository.findImageFileWithUserId(dto.getImageName(), userId).orElseThrow(ImageNotFoundException::new);
+        amazonS3Service.deleteFile(imageFile.getFileId());
+        imageFileRepository.delete(imageFile);
     }
 }
