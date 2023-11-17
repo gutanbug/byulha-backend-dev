@@ -1,17 +1,12 @@
 package Byulha.project.domain.user.controller;
 
-import Byulha.project.domain.user.model.dto.request.RequestReissueDto;
-import Byulha.project.domain.user.model.dto.request.RequestSignupDto;
-import Byulha.project.domain.user.model.dto.response.ResponseLoginDto;
-import Byulha.project.domain.user.model.dto.response.ResponseReissueDto;
-import Byulha.project.domain.user.model.dto.response.ResponseUserInfoDto;
+import Byulha.project.domain.user.model.dto.request.*;
+import Byulha.project.domain.user.model.dto.response.*;
 import Byulha.project.domain.user.service.SignupService;
 import Byulha.project.domain.user.service.UserFindService;
 import Byulha.project.domain.user.service.UserService;
 import Byulha.project.global.auth.jwt.AppAuthentication;
 import Byulha.project.global.auth.role.UserAuth;
-import Byulha.project.domain.user.model.dto.request.RequestLoginDto;
-import Byulha.project.domain.user.model.dto.response.ResponseSignupTokenDto;
 import Byulha.project.infra.s3.model.dto.request.RequestUploadFileDto;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -102,6 +97,32 @@ public class UserController {
     @PostMapping("/find/nickname")
     public void sendNicknameBySMS(@RequestParam String phone) throws NoSuchAlgorithmException, InvalidKeyException, JsonProcessingException {
         userFindService.sendNicknameBySMS(phone);
+    }
+
+    /**
+     * 휴대폰 재설정 인증 코드 전송 (1)
+     * <p>재설정 코드(6자리) SMS로 전송 -> 재설정 토큰(UUID) 응답.</p> 핸드폰 번호 재설정 플로우는 SMS인증 코드 전송 ->
+     * 인증 코드 확인 & 핸드폰 번호 변경 순으로 흘러갑니다.
+     *
+     * @param dto 요청 body
+     * @return 핸드폰 번호 재설정 토큰
+     */
+    @UserAuth
+    @PostMapping("/change/phone/verify")
+    public ResponseChangeTokenDto sendChangePhoneCodeBySMS(AppAuthentication auth, @Valid @RequestBody RequestWithPhoneNumberDto dto) throws NoSuchAlgorithmException, InvalidKeyException, JsonProcessingException {
+        return userFindService.sendChangePhoneCodeBySMS(auth.getUserId(), dto.getPhoneNumber());
+    }
+
+    /**
+     * 휴대폰 재설정 인증 코드 확인 (2)
+     * <p>재설정 토큰과 재설정 코드로 요청받은 번호로 핸드폰 번호 변경 합니다.</p>
+     *
+     * @param dto 요청 body
+     */
+    @PatchMapping("/change/phone")
+    @UserAuth
+    public void changePhoneNumber(AppAuthentication auth, @Valid @RequestBody RequestVerifyTokenCodeDto dto) {
+        userFindService.changePhoneNumber(auth.getUserId(), dto.getToken(), dto.getCode());
     }
 
     /**
