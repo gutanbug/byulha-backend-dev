@@ -1,7 +1,7 @@
 package Byulha.project.user.service;
 
-import Byulha.project.naver.sms.model.dto.MessageDto;
-import Byulha.project.naver.sms.service.NaverSMSService;
+import Byulha.project.infra.naver.sms.model.dto.MessageDto;
+import Byulha.project.infra.naver.sms.service.NaverSMSService;
 import Byulha.project.user.exception.UserNotFoundException;
 import Byulha.project.user.model.entity.User;
 import Byulha.project.user.repository.UserRepository;
@@ -27,7 +27,7 @@ public class UserFindService {
     /**
      * SMS로 닉네임을 전송합니다.
      *
-     * @param phone
+     * @param phone 전화번호
      */
     @Transactional(readOnly = true)
     public void sendNicknameBySMS(String phone) throws NoSuchAlgorithmException, InvalidKeyException, JsonProcessingException {

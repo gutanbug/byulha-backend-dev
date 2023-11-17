@@ -59,7 +59,6 @@ public class JwtAuthentication implements AppAuthentication {
 
     @Override
     public void setAuthenticated(boolean isAuthenticated) throws IllegalArgumentException {
-
     }
 
     @Override
