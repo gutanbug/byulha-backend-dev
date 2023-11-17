@@ -1,6 +1,5 @@
 package Byulha.project.global.error;
 
-import Byulha.project.user.exception.*;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
