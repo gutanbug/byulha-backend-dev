@@ -34,6 +34,7 @@ public class JwtProvider implements AuthenticationTokenProvider {
     @Value("${app.auth.jwt.secret-key}")
     private String secretKey;
 
+
     @Override
     public String getAccessTokenFromHeader(HttpServletRequest request) {
         Cookie[] cookies = request.getCookies();
@@ -74,20 +75,20 @@ public class JwtProvider implements AuthenticationTokenProvider {
                 .build();
     }
 
-    public AuthenticationToken reissue(String userId, UserRole userRole) {
-//        String validateRefreshToken = validateRefreshToken(refreshToken);
-        String accessToken = createAccessToken(userId, userRole);
+    public AuthenticationToken reissue(String accessToken, String refreshToken) {
+        //만료되면 새로운 refreshToken 반환.
+        String validateRefreshToken = validateRefreshToken(refreshToken);
+        accessToken = refreshAccessToken(accessToken);
 
         return JwtAuthenticationToken.builder()
                 .accessToken(accessToken)
-                .refreshToken("")
+                .refreshToken(validateRefreshToken)
                 .build();
     }
 
     private String refreshAccessToken(String accessToken) {
         String userId;
         UserRole role;
-
         try {
             Jws<Claims> claimsJws = validateAccessToken(accessToken);
             Claims body = claimsJws.getBody();
@@ -100,22 +101,21 @@ public class JwtProvider implements AuthenticationTokenProvider {
         return createAccessToken(userId, role);
     }
 
-    private String createAccessToken(String string, UserRole userRole) {
+    private String createAccessToken(String userId, UserRole role) {
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime validity = now.plus(accessExpiration);
 
         Map<String, Object> payloads = new HashMap<>();
-        payloads.put("userId", string);
-        payloads.put("userRole", userRole.name());
+        payloads.put("userId", userId);
+        payloads.put("userRole", role.getName());
 
         return Jwts.builder()
-                .setSubject("UserInfo")
+                .setSubject("UserInfo") //"sub":"userId"
                 .setClaims(payloads)
                 .setIssuedAt(Date.from(now.atZone(ZoneId.systemDefault()).toInstant()))
                 .setExpiration(Date.from(validity.atZone(ZoneId.systemDefault()).toInstant()))
                 .signWith(SignatureAlgorithm.HS256, secretKey.getBytes())
                 .compact();
-
     }
 
     private String createRefreshToken() {
@@ -131,16 +131,16 @@ public class JwtProvider implements AuthenticationTokenProvider {
     private Jws<Claims> validateAccessToken(String accessToken) {
         try {
             return Jwts.parser()
-                    .setSigningKey(secretKey)
+                    .setSigningKey(secretKey.getBytes())
                     .parseClaimsJws(accessToken);
-        } catch (IllegalArgumentException e) {
+        } catch (ExpiredJwtException e) {
             throw new ExpiredTokenException();
         } catch (JwtException e) {
             throw new InvalidTokenException();
         }
     }
 
-    public String validateRefreshToken(String refreshToken) {
+    private String validateRefreshToken(String refreshToken) {
         try {
             Jwts.parser()
                     .setSigningKey(secretKey.getBytes())
