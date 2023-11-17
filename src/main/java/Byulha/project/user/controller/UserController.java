@@ -1,5 +1,6 @@
 package Byulha.project.user.controller;
 
+import Byulha.project.global.auth.jwt.AppAuthentication;
 import Byulha.project.global.auth.role.UserAuth;
 import Byulha.project.user.model.dto.request.RequestLoginDto;
 import Byulha.project.user.model.dto.request.RequestReissueDto;
@@ -7,6 +8,7 @@ import Byulha.project.user.model.dto.request.RequestSignupDto;
 import Byulha.project.user.model.dto.response.ResponseLoginDto;
 import Byulha.project.user.model.dto.response.ResponseReissueDto;
 import Byulha.project.user.model.dto.response.ResponseSignupTokenDto;
+import Byulha.project.user.model.dto.response.ResponseUserInfoDto;
 import Byulha.project.user.service.SignupService;
 import Byulha.project.user.service.UserFindService;
 import Byulha.project.user.service.UserService;
@@ -15,6 +17,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
@@ -73,8 +76,20 @@ public class UserController {
      */
     @UserAuth
     @PostMapping("/reissue")
-    public ResponseReissueDto reissue(@Valid @RequestBody RequestReissueDto dto) {
-        return userService.reissue(dto.getRefreshToken());
+    public ResponseReissueDto reissue(HttpServletRequest request,
+                                      @Valid @RequestBody RequestReissueDto dto) {
+        return userService.reissue(request, dto.getRefreshToken());
+    }
+
+    /**
+     * 내 정보 조회
+     *
+     * @param auth         인증 정보
+     */
+    @GetMapping
+    @UserAuth
+    public ResponseUserInfoDto getUserInfo(AppAuthentication auth) {
+        return userService.getUserInfo(auth.getUserId());
     }
 
     /**
@@ -82,7 +97,6 @@ public class UserController {
      *
      * @param phone         전화번호
      */
-
     @PostMapping("/find/nickname")
     public void sendNicknameBySMS(@RequestParam String phone) throws NoSuchAlgorithmException, InvalidKeyException, JsonProcessingException {
         userFindService.sendNicknameBySMS(phone);

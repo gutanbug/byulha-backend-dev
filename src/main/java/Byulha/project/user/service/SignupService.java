@@ -43,6 +43,7 @@ public class SignupService {
             user.changeName(dto.getName());
             user.changeNickname(dto.getNickname());
             user.changePhone(phone);
+            user.changeAge(dto.getAge());
             user.changePassword(encryptedPassword);
         } else{
             User user = User.builder()
@@ -50,6 +51,8 @@ public class SignupService {
                     .nickname(dto.getNickname())
                     .password(encryptedPassword)
                     .phone(phone)
+                    .age(dto.getAge())
+                    .sex(dto.getSex())
                     .userRole(UserRole.USER)
                     .status(UserStatus.ACTIVE)
                     .build();

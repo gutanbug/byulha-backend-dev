@@ -1,8 +1,8 @@
 package Byulha.project.user.service;
 
 import Byulha.project.global.generator.CodeGenerator;
-import Byulha.project.naver.sms.model.dto.MessageDto;
-import Byulha.project.naver.sms.service.NaverSMSService;
+import Byulha.project.infra.naver.sms.model.dto.MessageDto;
+import Byulha.project.infra.naver.sms.service.NaverSMSService;
 import Byulha.project.user.exception.AlreadyPhoneException;
 import Byulha.project.user.exception.NotSMSAuthorizedException;
 import Byulha.project.user.exception.NotSMSSentException;
@@ -13,7 +13,6 @@ import Byulha.project.user.repository.SignupAuthRepository;
 import Byulha.project.user.repository.UserRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
