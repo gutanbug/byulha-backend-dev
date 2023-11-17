@@ -2,6 +2,7 @@ package Byulha.project.user.model.entity;
 
 import Byulha.project.global.auth.role.UserRole;
 import Byulha.project.global.base.BaseEntity;
+import Byulha.project.infra.s3.model.ImageFile;
 import Byulha.project.user.model.UserStatus;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -10,6 +11,8 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "user")
@@ -35,23 +38,37 @@ public class User extends BaseEntity {
     @NotNull
     private String phone;
 
+    @NotNull
+    private String age;
+
+    @NotNull
+    private String sex;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.PERSIST, orphanRemoval = true)
+    private List<ImageFile> files = new ArrayList<>();
+
     @Enumerated(EnumType.STRING)
     private UserRole userRole;
 
     @Enumerated(EnumType.STRING)
     private UserStatus status;
 
+
     @Builder
     private User(@NotNull String name,
                  @NotNull String nickname,
                  @NotNull String password,
                  @NotNull String phone,
+                 @NotNull String age,
+                 @NotNull String sex,
                  UserRole userRole,
                  UserStatus status) {
         this.name = name;
         this.nickname = nickname;
         this.password = password;
         this.phone = phone;
+        this.age = age;
+        this.sex = sex;
         this.userRole = userRole;
         this.status = status;
     }
@@ -102,6 +119,15 @@ public class User extends BaseEntity {
     }
 
     /**
+     * 나이를 변경합니다.
+     *
+     * @param age 나이
+     */
+    public void changeAge(String age) {
+        this.age = age;
+    }
+
+    /**
      * Dummy 회원의 값으로 변경하기 위해서 null로 만듭니다.
      */
     public void emptyOutUserInfo() {
@@ -110,4 +136,5 @@ public class User extends BaseEntity {
         this.password = "";
         this.phone = "";
     }
+
 }

@@ -23,6 +23,14 @@ public class RequestSignupDto {
     private final String nickname;
 
     @NotBlank
+    @Schema(description = "나이", example = "20")
+    private final String age;
+
+    @NotBlank
+    @Schema(description = "성별", example = "남자")
+    private final String sex;
+
+    @NotBlank
     @Size(min = 11, max = 11)
     @Schema(description = "전화번호", example = "01012345678")
     private final String phone;
