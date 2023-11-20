@@ -1,5 +1,6 @@
 package Byulha.project.global.auth.role;
 
+import Byulha.project.global.auth.jwt.AppAuthentication;
 import lombok.Getter;
 
 import java.util.Map;
@@ -11,11 +12,12 @@ import static Byulha.project.global.auth.role.UserAuthNames.*;
 @Getter
 public enum UserRole {
     USER(ROLE_USER),
+    GUEST(ROLE_GUEST),
     ADMIN(combine(ROLE_ADMIN, ROLE_USER));
 
     private final String name;
 
-    UserRole(String name){
+    UserRole(String name) {
         this.name = name;
     }
 
@@ -26,12 +28,12 @@ public enum UserRole {
         return BY_LABEL.get(name);
     }
 
-//    public static UserRole from(AppAuthentication auth) {
-//        if (auth == null) {
-//            return GUEST;
-//        }
-//        return auth.getUserRole();
-//    }
+    public static UserRole from(AppAuthentication auth) {
+        if (auth == null) {
+            return GUEST;
+        }
+        return auth.getUserRole();
+    }
 
     public boolean isAdmin() {
         return this == ADMIN;
