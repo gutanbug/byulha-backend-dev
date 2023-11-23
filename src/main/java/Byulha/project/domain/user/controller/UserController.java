@@ -55,6 +55,15 @@ public class UserController {
     }
 
     /**
+     * 닉네임 중복 확인
+     * @param nickname     닉네임
+     */
+    @PostMapping("/signup/verify/{nickname}")
+    public void verifyNickname(@PathVariable("nickname") String nickname) {
+        signupService.checkAlreadyNickname(nickname);
+    }
+
+    /**
      * 로그인
      *
      * @param dto           요청 body
