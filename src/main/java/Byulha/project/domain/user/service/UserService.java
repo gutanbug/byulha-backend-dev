@@ -71,7 +71,7 @@ public class UserService {
         User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
 
         return new ResponseUserInfoDto(user.getName(), user.getNickname(),
-                user.getPhone(), user.getAge(), user.getSex(), user.getUserRole().isAdmin());
+                user.getPhone(), user.getAge(), user.getGender(), user.getUserRole().isAdmin());
     }
 
     @Transactional
