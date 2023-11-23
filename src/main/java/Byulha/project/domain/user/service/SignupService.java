@@ -52,7 +52,7 @@ public class SignupService {
                     .password(encryptedPassword)
                     .phone(phone)
                     .age(dto.getAge())
-                    .sex(dto.getSex())
+                    .gender(dto.getGender())
                     .userRole(UserRole.USER)
                     .status(UserStatus.ACTIVE)
                     .build();
