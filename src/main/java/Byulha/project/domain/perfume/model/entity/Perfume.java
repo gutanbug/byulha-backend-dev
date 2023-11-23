@@ -1,0 +1,71 @@
+package Byulha.project.domain.perfume.model.entity;
+
+import Byulha.project.domain.perfume.model.ForGender;
+import Byulha.project.domain.perfume.model.Longevity;
+import Byulha.project.domain.perfume.model.PriceValue;
+import Byulha.project.domain.perfume.model.Sillage;
+import Byulha.project.global.base.BaseEntity;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+
+import static lombok.AccessLevel.*;
+
+@Entity
+@Table(name = "perfume")
+@Getter
+@NoArgsConstructor(access = PROTECTED)
+public class Perfume extends BaseEntity {
+
+    @Id
+    @GeneratedValue
+    @Column(name = "perfume_id")
+    private Long id;
+
+    @NotNull
+    private String name;
+
+    @NotNull
+    private String company;
+
+    @NotNull
+    @Lob
+    private String notes;
+
+    @NotNull
+    private double rating;
+
+    @Enumerated(EnumType.STRING)
+    private ForGender forGender;
+
+    @Enumerated(EnumType.STRING)
+    private Longevity longevity;
+
+    @Enumerated(EnumType.STRING)
+    private Sillage sillage;
+
+    @Enumerated(EnumType.STRING)
+    private PriceValue priceValue;
+
+    @Builder
+    private Perfume(@NotNull String name,
+                    @NotNull String company,
+                    @NotNull String notes,
+                    @NotNull double rating,
+                    @NotNull ForGender forGender,
+                    @NotNull Longevity longevity,
+                    @NotNull Sillage sillage,
+                    @NotNull PriceValue priceValue) {
+        this.name = name;
+        this.company = company;
+        this.notes = notes;
+        this.rating = rating;
+        this.forGender = forGender;
+        this.longevity = longevity;
+        this.sillage = sillage;
+        this.priceValue = priceValue;
+    }
+}

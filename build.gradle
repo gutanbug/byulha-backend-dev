@@ -37,6 +37,9 @@ dependencies {
 	// http
 	implementation group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.13'
 
+	// websocket
+	implementation 'org.springframework.boot:spring-boot-starter-websocket'
+
 	// db
 	runtimeOnly 'com.mysql:mysql-connector-j'
 
@@ -49,6 +52,7 @@ dependencies {
 
 	// json
 	implementation 'com.googlecode.json-simple:json-simple:1.1.1'
+	implementation 'org.json:json:20200518'
 
 	// swagger
 	annotationProcessor 'com.github.therapi:therapi-runtime-javadoc-scribe:0.15.0'

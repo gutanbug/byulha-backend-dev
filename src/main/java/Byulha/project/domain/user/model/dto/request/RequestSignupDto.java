@@ -1,5 +1,6 @@
 package Byulha.project.domain.user.model.dto.request;
 
+import Byulha.project.domain.user.model.Gender;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -26,9 +27,8 @@ public class RequestSignupDto {
     @Schema(description = "나이", example = "20")
     private final String age;
 
-    @NotBlank
-    @Schema(description = "성별", example = "남자")
-    private final String sex;
+    @Schema(description = "성별", example = "MALE")
+    private final Gender gender;
 
     @NotBlank
     @Size(min = 11, max = 11)
