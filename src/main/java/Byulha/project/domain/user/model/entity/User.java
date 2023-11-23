@@ -1,5 +1,6 @@
 package Byulha.project.domain.user.model.entity;
 
+import Byulha.project.domain.user.model.Gender;
 import Byulha.project.domain.user.model.UserStatus;
 import Byulha.project.global.auth.role.UserRole;
 import Byulha.project.global.base.BaseEntity;
@@ -41,8 +42,8 @@ public class User extends BaseEntity {
     @NotNull
     private String age;
 
-    @NotNull
-    private String sex;
+    @Enumerated(EnumType.STRING)
+    private Gender gender;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.PERSIST, orphanRemoval = true)
     private List<ImageFile> files = new ArrayList<>();
@@ -60,7 +61,7 @@ public class User extends BaseEntity {
                  @NotNull String password,
                  @NotNull String phone,
                  @NotNull String age,
-                 @NotNull String sex,
+                 Gender gender,
                  UserRole userRole,
                  UserStatus status) {
         this.name = name;
@@ -68,7 +69,7 @@ public class User extends BaseEntity {
         this.password = password;
         this.phone = phone;
         this.age = age;
-        this.sex = sex;
+        this.gender = gender;
         this.userRole = userRole;
         this.status = status;
     }
