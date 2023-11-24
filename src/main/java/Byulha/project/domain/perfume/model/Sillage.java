@@ -5,7 +5,7 @@ public enum Sillage {
     /**
      * 친밀함
      */
-    INITIMATE,
+    INTIMATE,
 
     /**
      * 보통
