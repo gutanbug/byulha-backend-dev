@@ -43,6 +43,10 @@ dependencies {
 	// db
 	runtimeOnly 'com.mysql:mysql-connector-j'
 
+	// parser
+	implementation "org.apache.poi:poi:4.1.2"
+	implementation "org.apache.poi:poi-ooxml:4.1.2"
+
 	//lombok
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
