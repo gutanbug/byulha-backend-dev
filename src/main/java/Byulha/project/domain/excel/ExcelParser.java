@@ -1,6 +1,13 @@
 package Byulha.project.domain.excel;
 
 import Byulha.project.domain.excel.model.dto.request.RequestExcelDto;
+import Byulha.project.domain.perfume.model.ForGender;
+import Byulha.project.domain.perfume.model.PriceValue;
+import Byulha.project.domain.perfume.model.Sillage;
+import Byulha.project.domain.perfume.model.entity.Perfume;
+import Byulha.project.domain.perfume.repository.PerfumeRepository;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.openxml4j.opc.OPCPackage;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
@@ -11,9 +18,12 @@ import org.springframework.stereotype.Service;
 import java.util.*;
 import java.util.stream.Collectors;
 
-
 @Service
+@Slf4j
+@RequiredArgsConstructor
 public class ExcelParser {
+
+    private final PerfumeRepository perfumeRepository;
 
     public void parseExcelData(RequestExcelDto dto) throws Exception {
         OPCPackage opcPackage = OPCPackage.open(dto.getExcelFile().getInputStream());
@@ -21,14 +31,14 @@ public class ExcelParser {
 
         XSSFSheet sheet = workbook.getSheetAt(0);
 
-        for(int i=1; i<2; i++) {
+        for(int i=1; i<318; i++) {
             XSSFRow row = sheet.getRow(i);
 
             String link = "";
             String name = "";
             String company = "";
             String for_gender = "";
-            double rating;
+            double rating = 0;
             String notes = "";
             String sillage = "";
             String price_value = "";
@@ -111,7 +121,28 @@ public class ExcelParser {
 
                 price_value = sortedData.get(0).getKey();
             }
+
+            Perfume perfume = Perfume.builder()
+                    .perfumeUrl(link)
+                    .name(name)
+                    .company(company)
+                    .notes(notes)
+                    .rating(rating)
+                    .forGender(changeGender(for_gender))
+                    .sillage(Sillage.valueOf(sillage.toUpperCase().replace(" ", "_")))
+                    .priceValue(PriceValue.valueOf(price_value.toUpperCase().replace(" ", "_")))
+                    .build();
+
+            perfumeRepository.save(perfume);
+            log.info("perfume: {}", perfume);
         }
+    }
+
+    private ForGender changeGender(String forGender) {
+        if (forGender.equals("for women and men")) {
+            return ForGender.FOR_BOTH;
+        }
+        return ForGender.valueOf(forGender.toUpperCase().replace(" ", "_"));
     }
 
     private Map<String, Double> sortData(HashMap<String, Double> input) {
