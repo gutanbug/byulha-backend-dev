@@ -3,6 +3,8 @@ package Byulha.project.domain.perfume.model;
 import Byulha.project.domain.perfume.model.entity.Perfume;
 import org.springframework.data.jpa.domain.Specification;
 
+import static antlr.build.ANTLR.root;
+
 public class PerfumeSpec {
 
     public static Specification<Perfume> withForGender(String forGender) {
@@ -30,5 +32,14 @@ public class PerfumeSpec {
 
         return (root, query, builder) ->
                 builder.equal(root.get("priceValue"), PriceValue.valueOf(priceValue));
+    }
+
+    public static Specification<Perfume> withIsDesc(boolean isDesc) {
+        return (root, query, builder) -> {
+            if(isDesc){
+                query.orderBy(builder.desc(root.get("rating")));
+            }
+            return builder.conjunction();
+        };
     }
 }
