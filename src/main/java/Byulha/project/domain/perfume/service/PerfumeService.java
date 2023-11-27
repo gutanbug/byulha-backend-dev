@@ -24,10 +24,12 @@ public class PerfumeService {
     public Page<ResponsePerfumeListDto> getPerfumeList(String forGender,
                                                        String sillage,
                                                        String priceValue,
+                                                       boolean isDesc,
                                                        Pageable pageable) {
         Specification<Perfume> spec = PerfumeSpec.withForGender(forGender);
         spec = spec.and(PerfumeSpec.withSillage(sillage));
         spec = spec.and(PerfumeSpec.withPriceValue(priceValue));
+        spec = spec.and(PerfumeSpec.withIsDesc(isDesc));
 
         return getResponsePerfumeListDto(pageable, spec);
     }
@@ -45,4 +47,5 @@ public class PerfumeService {
         Perfume perfume = perfumeRepository.findOneById(perfumeId);
         return new ResponsePerfumeDetailDto(perfume, messageSource);
     }
+
 }
