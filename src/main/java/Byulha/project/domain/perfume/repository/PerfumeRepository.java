@@ -8,6 +8,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 
+import java.util.List;
+
 public interface PerfumeRepository extends JpaRepository<Perfume, Long>, JpaSpecificationExecutor<Perfume> {
 
 //    @EntityGraph(attributePaths = {"perfume", "perfume.forGender", "perfume.sillage", "perfume.priceValue"})
@@ -15,4 +17,7 @@ public interface PerfumeRepository extends JpaRepository<Perfume, Long>, JpaSpec
 
     @Query("select p from Perfume p where p.id = :perfumeId")
     Perfume findOneById(Long perfumeId);
+
+    @Query("select p.notes from Perfume p")
+    List<String> findAllWithNotes();
 }

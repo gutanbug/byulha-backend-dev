@@ -11,6 +11,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+import java.util.Set;
+
 
 @RestController
 @RequiredArgsConstructor
@@ -46,5 +49,13 @@ public class PerfumeController {
     @PostMapping("{perfumeId}")
     public ResponsePerfumeDetailDto getPerfumeDetail(@PathVariable Long perfumeId) {
         return perfumeService.getPerfumeDetail(perfumeId);
+    }
+
+    /**
+     * 겹치지 않는 향수 노트 조회
+     */
+    @GetMapping("/notes")
+    public Set<String> getNotes() {
+        return perfumeService.getNotes();
     }
 }

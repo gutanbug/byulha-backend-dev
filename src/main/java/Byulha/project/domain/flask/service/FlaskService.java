@@ -27,7 +27,8 @@ public class FlaskService {
 
         HttpEntity<String> entity = new HttpEntity<String>(param , headers);
 
-        String url = "http://127.0.0.1:8082/receive_string";
+        //TODO : userId를 URL 뒤에 붙여서 출력해주기
+        String url = "http://127.0.0.1:8082/receive_string/";
         return restTemplate.postForObject(url, entity, String.class);
     }
 }

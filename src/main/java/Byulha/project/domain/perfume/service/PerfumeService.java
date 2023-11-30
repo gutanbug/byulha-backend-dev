@@ -13,6 +13,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -48,4 +53,16 @@ public class PerfumeService {
         return new ResponsePerfumeDetailDto(perfume, messageSource);
     }
 
+    public Set<String> getNotes() {
+        Set<String> uniqueStrings = new HashSet<>();
+
+        List<String> notesList = perfumeRepository.findAllWithNotes();
+        for (String notes : notesList) {
+            String[] split = notes.split(",");
+            for(String note : split) {
+                uniqueStrings.add(note.trim());
+            }
+        }
+        return uniqueStrings;
+    }
 }
