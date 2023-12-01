@@ -18,7 +18,9 @@ public class ImageResult {
     @GeneratedValue
     private Long id;
 
-    private String nickname;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
 
     private String fileId;
 
@@ -27,8 +29,8 @@ public class ImageResult {
     private PerfumeCategory perfumeCategory;
 
     @Builder
-    private ImageResult(String nickname, String fileId, PerfumeCategory perfumeCategory) {
-        this.nickname = nickname;
+    private ImageResult(String fileId, User user, PerfumeCategory perfumeCategory) {
+        this.user = user;
         this.fileId = fileId;
         this.perfumeCategory = perfumeCategory;
     }
