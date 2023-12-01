@@ -9,6 +9,7 @@ import Byulha.project.domain.perfume.repository.PerfumeRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.openxml4j.opc.OPCPackage;
+import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -31,7 +32,7 @@ public class ExcelParser {
 
         XSSFSheet sheet = workbook.getSheetAt(0);
 
-        for(int i=1; i<318; i++) {
+        for(int i=1;i <637; i++){
             XSSFRow row = sheet.getRow(i);
 
             String link = "";
@@ -43,9 +44,6 @@ public class ExcelParser {
             String sillage = "";
             String price_value = "";
 
-
-            List<String> excelData= new ArrayList<>();
-
             // link (String)
             XSSFCell cell = row.getCell(0);
             if (null != cell) {
@@ -54,7 +52,9 @@ public class ExcelParser {
 
             // name (String)
             cell = row.getCell(1);
-            if (null != cell) {
+            if (null != cell && cell.getCellType() == CellType.NUMERIC) {
+                name = String.valueOf(cell.getNumericCellValue());
+            } else if(null != cell && cell.getCellType() == CellType.STRING) {
                 name = cell.getStringCellValue();
             }
 
@@ -134,7 +134,6 @@ public class ExcelParser {
                     .build();
 
             perfumeRepository.save(perfume);
-            log.info("perfume: {}", perfume);
         }
     }
 
@@ -150,7 +149,7 @@ public class ExcelParser {
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, HashMap::new));
     }
 
-    private static HashMap<String, Double> parseData(String input) {
+    private HashMap<String, Double> parseData(String input) {
         HashMap<String, Double> data = new HashMap<>();
         int startIndex = input.indexOf("{");
         int endIndex = input.indexOf("}");
