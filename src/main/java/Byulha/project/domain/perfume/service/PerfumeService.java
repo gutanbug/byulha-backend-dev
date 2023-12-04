@@ -19,6 +19,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -53,7 +54,10 @@ public class PerfumeService {
 
     public ResponsePerfumeDetailDto getPerfumeDetail(Long perfumeId) {
         Perfume perfume = perfumeRepository.findOneById(perfumeId);
-        return new ResponsePerfumeDetailDto(perfume, messageSource);
+        List<String> notesList = Arrays.stream(perfume.getNotes().trim()
+                .split(",")).collect(Collectors.toList());
+
+        return new ResponsePerfumeDetailDto(perfume, notesList, messageSource);
     }
 
     public Set<String> getNotes() {

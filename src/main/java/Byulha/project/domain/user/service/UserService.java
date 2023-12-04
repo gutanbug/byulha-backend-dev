@@ -132,7 +132,6 @@ public class UserService {
                 .user(user)
                 .fileId(fileIdList.get(0))
                 .perfumeCategory(category)
-
                 .build();
         imageResultRepository.save(imageResult);
 
