@@ -11,6 +11,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Set;
+
 
 @RestController
 @RequiredArgsConstructor
@@ -20,7 +22,6 @@ public class PerfumeController {
 
     private final PerfumeService perfumeService;
 
-    //TODO 향수 필터링도 포함하여 같이 구현
     /**
      * 향수 목록 전체 조회
      *
@@ -46,5 +47,23 @@ public class PerfumeController {
     @PostMapping("{perfumeId}")
     public ResponsePerfumeDetailDto getPerfumeDetail(@PathVariable Long perfumeId) {
         return perfumeService.getPerfumeDetail(perfumeId);
+    }
+
+    /**
+     * 겹치지 않는 향수 노트 조회
+     */
+    @GetMapping("/notes")
+    public Set<String> getNotes() {
+        return perfumeService.getNotes();
+    }
+
+    /**
+     * 향수 카테고리 생성(프론트X)
+     *
+     * 이 메서드는 한 번만 실행하면 되므로 실행 이후에는 사용하지 않는다.
+     */
+    @GetMapping("/create/category")
+    public void createPerfumeCategory() {
+        perfumeService.createPerfumeCategory();
     }
 }
