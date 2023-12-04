@@ -8,11 +8,23 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 
+import java.util.List;
+
 public interface PerfumeRepository extends JpaRepository<Perfume, Long>, JpaSpecificationExecutor<Perfume> {
 
-//    @EntityGraph(attributePaths = {"perfume", "perfume.forGender", "perfume.sillage", "perfume.priceValue"})
     Page<Perfume> findAll(Specification<Perfume> spec, Pageable pageable);
 
     @Query("select p from Perfume p where p.id = :perfumeId")
     Perfume findOneById(Long perfumeId);
+
+    @Query("select p.notes from Perfume p")
+    List<String> findAllWithNotes();
+
+    @Query("select p from Perfume p where p.notes like :note1% or p.notes like :note2%" +
+            " or p.notes like :note3% or p.notes like :note4% or p.notes like :note5%" +
+            " or p.notes like :note6% or p.notes like :note7% or p.notes like :note8%" +
+            " order by length(p.notes) ")
+    Page<Perfume> findAllWithNotesOrderByLength(String note1, String note2, String note3,
+                                                String note4, String note5, String note6,
+                                                String note7, String note8, Pageable pageable);
 }
