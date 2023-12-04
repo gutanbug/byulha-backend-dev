@@ -24,12 +24,16 @@ public class ResponsePerfumeListDto {
     @Schema(description = "향수 사용 성별", example = "남성")
     private final String forGender;
 
+    @Schema(description = "향수 썸네일 이미지 경로", example = "https://www.naver.com")
+    private final String thumbnailUrl;
+
     public ResponsePerfumeListDto(Perfume perfume, MessageSource messageSource) {
         this.id = perfume.getId();
         this.name = perfume.getName();
         this.company = perfume.getCompany();
         this.rating = perfume.getRating();
         this.forGender = messageSource.getMessage("perfume.for-gender." + perfume.getForGender().name().toLowerCase(), null, LocaleContextHolder.getLocale());
+        this.thumbnailUrl = perfume.getThumbnailImage();
     }
 
 }
