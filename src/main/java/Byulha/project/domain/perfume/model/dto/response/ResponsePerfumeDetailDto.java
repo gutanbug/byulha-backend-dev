@@ -5,6 +5,8 @@ import lombok.Getter;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 
+import java.util.List;
+
 @Getter
 public class ResponsePerfumeDetailDto {
 
@@ -14,7 +16,7 @@ public class ResponsePerfumeDetailDto {
 
     private final String company;
 
-    private final String notes;
+    private final List<String> notes;
 
     private final String rating;
 
@@ -24,14 +26,17 @@ public class ResponsePerfumeDetailDto {
 
     private final String priceValue;
 
-    public ResponsePerfumeDetailDto(Perfume perfume, MessageSource messageSource) {
+    private final String perfumeImage;
+
+    public ResponsePerfumeDetailDto(Perfume perfume, List<String> notesList, MessageSource messageSource) {
         this.perfumeUrl = perfume.getPerfumeUrl();
         this.name = perfume.getName();
         this.company = perfume.getCompany();
-        this.notes = perfume.getNotes();
+        this.notes = notesList;
         this.rating = String.valueOf(perfume.getRating());
         this.forGender = messageSource.getMessage("perfume.for-gender." + perfume.getForGender().name().toLowerCase(), null, LocaleContextHolder.getLocale());
         this.sillage = messageSource.getMessage("perfume.sillage." + perfume.getSillage().name().toLowerCase(), null, LocaleContextHolder.getLocale());
         this.priceValue = messageSource.getMessage("perfume.price-value." + perfume.getPriceValue().name().toLowerCase(), null, LocaleContextHolder.getLocale());
+        this.perfumeImage = perfume.getPerfumeImage();
     }
 }
