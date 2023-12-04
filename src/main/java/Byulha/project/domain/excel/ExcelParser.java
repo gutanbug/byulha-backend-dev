@@ -17,6 +17,8 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 @Service
@@ -43,6 +45,8 @@ public class ExcelParser {
             String notes = "";
             String sillage = "";
             String price_value = "";
+            String perfume_image = "";
+            String thumbnail_image = "";
 
             // link (String)
             XSSFCell cell = row.getCell(0);
@@ -88,7 +92,7 @@ public class ExcelParser {
 
                 StringBuilder resultNotes = new StringBuilder();
                 for (int j=0; j<sortedData.size(); j++) {
-                    resultNotes.append(sortedData.get(j).getKey());
+                    resultNotes.append(sortedData.get(j).getKey()).append(":").append(sortedData.get(j).getValue());
                     if (j != sortedData.size() - 1) {
                         resultNotes.append(",");
                     }
@@ -122,6 +126,18 @@ public class ExcelParser {
                 price_value = sortedData.get(0).getKey();
             }
 
+            // perfume image (String)
+            cell = row.getCell(0);
+            if (null != cell) {
+                String perfumeUrl = cell.getStringCellValue();
+                String perfumeNum = extractNumberFromUrl(perfumeUrl);
+                perfume_image = "https://fimgs.net/mdimg/perfume/375x500." + perfumeNum + ".jpg";
+
+                thumbnail_image = "https://fimgs.net/mdimg/perfume/m." + perfumeNum + ".jpg";
+            }
+
+            // thumbnail image (String)
+
             Perfume perfume = Perfume.builder()
                     .perfumeUrl(link)
                     .name(name)
@@ -131,9 +147,22 @@ public class ExcelParser {
                     .forGender(changeGender(for_gender))
                     .sillage(Sillage.valueOf(sillage.toUpperCase().replace(" ", "_")))
                     .priceValue(PriceValue.valueOf(price_value.toUpperCase().replace(" ", "_")))
+                    .perfumeImage(perfume_image)
+                    .thumbnailImage(thumbnail_image)
                     .build();
 
             perfumeRepository.save(perfume);
+        }
+    }
+
+    private String extractNumberFromUrl(String perfumeUrl) {
+        Pattern pattern = Pattern.compile(("-(\\d+)\\.html"));
+        Matcher matcher = pattern.matcher(perfumeUrl);
+
+        if (matcher.find()) {
+            return String.valueOf(matcher.group(1));
+        } else {
+            throw new IllegalArgumentException("No number found in the URL");
         }
     }
 
