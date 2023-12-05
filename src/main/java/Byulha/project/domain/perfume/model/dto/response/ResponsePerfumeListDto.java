@@ -41,7 +41,6 @@ public class ResponsePerfumeListDto {
         this.forGender = messageSource.getMessage("perfume.for-gender." + perfume.getForGender().name().toLowerCase(), null, LocaleContextHolder.getLocale());
         this.sillage = messageSource.getMessage("perfume.sillage." + perfume.getSillage().name().toLowerCase(), null, LocaleContextHolder.getLocale());
         this.longevity = messageSource.getMessage("perfume.longevity." + perfume.getLongevity().name().toLowerCase(), null, LocaleContextHolder.getLocale());
-
         this.thumbnailUrl = perfume.getThumbnailImage();
     }
 

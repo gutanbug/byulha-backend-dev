@@ -51,7 +51,7 @@ public class Perfume extends BaseEntity {
     private PriceValue priceValue;
 
     @Enumerated(EnumType.STRING)
-    private @NotNull Longevity longevity;
+    private Longevity longevity;
 
     @NotNull
     private String perfumeImage;
