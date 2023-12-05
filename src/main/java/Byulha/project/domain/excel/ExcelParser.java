@@ -2,6 +2,7 @@ package Byulha.project.domain.excel;
 
 import Byulha.project.domain.excel.model.dto.request.RequestExcelDto;
 import Byulha.project.domain.perfume.model.ForGender;
+import Byulha.project.domain.perfume.model.Longevity;
 import Byulha.project.domain.perfume.model.PriceValue;
 import Byulha.project.domain.perfume.model.Sillage;
 import Byulha.project.domain.perfume.model.entity.Perfume;
@@ -44,6 +45,7 @@ public class ExcelParser {
             double rating = 0;
             String notes = "";
             String sillage = "";
+            String longevity = "";
             String price_value = "";
             String perfume_image = "";
             String thumbnail_image = "";
@@ -100,6 +102,19 @@ public class ExcelParser {
                 notes = resultNotes.toString();
             }
 
+            // longevity (String)
+            cell = row.getCell(6);
+            if (null != cell) {
+                String longevityData = cell.getStringCellValue();
+                HashMap<String, Double> longevityMap = parseData(longevityData);
+
+                List<Map.Entry<String, Double>> sortedData = new ArrayList<>(longevityMap.entrySet());
+
+                sortedData.sort((entry1, entry2) -> entry2.getValue().compareTo(entry1.getValue()));
+
+                longevity = sortedData.get(0).getKey();
+            }
+
             // sillage (String)
             cell = row.getCell(7);
             if (null != cell) {
@@ -147,6 +162,7 @@ public class ExcelParser {
                     .forGender(changeGender(for_gender))
                     .sillage(Sillage.valueOf(sillage.toUpperCase().replace(" ", "_")))
                     .priceValue(PriceValue.valueOf(price_value.toUpperCase().replace(" ", "_")))
+                    .longevity(Longevity.valueOf(longevity.toUpperCase().replace(" ", "_")))
                     .perfumeImage(perfume_image)
                     .thumbnailImage(thumbnail_image)
                     .build();
