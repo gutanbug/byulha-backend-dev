@@ -2,6 +2,7 @@ package Byulha.project.domain.excel;
 
 import Byulha.project.domain.excel.model.dto.request.RequestExcelDto;
 import Byulha.project.domain.perfume.model.ForGender;
+import Byulha.project.domain.perfume.model.Longevity;
 import Byulha.project.domain.perfume.model.PriceValue;
 import Byulha.project.domain.perfume.model.Sillage;
 import Byulha.project.domain.perfume.model.entity.Perfume;
@@ -172,6 +173,21 @@ public class ExcelParser {
         }
         return ForGender.valueOf(forGender.toUpperCase().replace(" ", "_"));
     }
+
+    private Longevity changeLongevity(String longevity) {
+        if (longevity.equals("very weak")) {
+            return Longevity.VERY_WEAK;
+        }
+        if (longevity.equals("long lasting")) {
+            return Longevity.LONG_LASTING;
+        }
+        return Longevity.valueOf(longevity.toUpperCase().replace(" ", "_"));
+    }
+
+
+
+
+
 
     private Map<String, Double> sortData(HashMap<String, Double> input) {
         return input.entrySet().stream().sorted(Map.Entry.<String, Double>comparingByValue().reversed())
