@@ -1,6 +1,7 @@
 package Byulha.project.domain.perfume.model.entity;
 
 import Byulha.project.domain.perfume.model.ForGender;
+import Byulha.project.domain.perfume.model.Longevity;
 import Byulha.project.domain.perfume.model.PriceValue;
 import Byulha.project.domain.perfume.model.Sillage;
 import Byulha.project.global.base.BaseEntity;
@@ -44,6 +45,9 @@ public class Perfume extends BaseEntity {
     private ForGender forGender;
 
     @Enumerated(EnumType.STRING)
+    private Longevity longevity;
+
+    @Enumerated(EnumType.STRING)
     private Sillage sillage;
 
     @Enumerated(EnumType.STRING)
@@ -64,6 +68,7 @@ public class Perfume extends BaseEntity {
                     @NotNull ForGender forGender,
                     @NotNull Sillage sillage,
                     @NotNull PriceValue priceValue,
+                    @NotNull Longevity longevity,
                     @NotNull String perfumeImage,
                     @NotNull String thumbnailImage) {
         this.perfumeUrl = perfumeUrl;
@@ -74,6 +79,7 @@ public class Perfume extends BaseEntity {
         this.forGender = forGender;
         this.sillage = sillage;
         this.priceValue = priceValue;
+        this.longevity = longevity;
         this.perfumeImage = perfumeImage;
         this.thumbnailImage = thumbnailImage;
     }
