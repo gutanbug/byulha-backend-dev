@@ -1,7 +1,6 @@
 package Byulha.project.domain.perfume.model;
 
 public enum Longevity {
-
     /**
      * 매우 비쌈
      */
@@ -27,4 +26,3 @@ public enum Longevity {
      */
     VERY_WEAK;
 }
-

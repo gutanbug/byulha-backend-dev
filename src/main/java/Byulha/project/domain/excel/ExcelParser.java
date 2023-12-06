@@ -2,7 +2,6 @@ package Byulha.project.domain.excel;
 
 import Byulha.project.domain.excel.model.dto.request.RequestExcelDto;
 import Byulha.project.domain.perfume.model.ForGender;
-import Byulha.project.domain.perfume.model.Longevity;
 import Byulha.project.domain.perfume.model.PriceValue;
 import Byulha.project.domain.perfume.model.Sillage;
 import Byulha.project.domain.perfume.model.entity.Perfume;
@@ -44,7 +43,6 @@ public class ExcelParser {
             String for_gender = "";
             double rating = 0;
             String notes = "";
-            String longevity ="";
             String sillage = "";
             String price_value = "";
             String perfume_image = "";
@@ -102,19 +100,6 @@ public class ExcelParser {
                 notes = resultNotes.toString();
             }
 
-            // Longevity (String)
-            cell = row.getCell(6);
-            if (null != cell) {
-                String longevityData = cell.getStringCellValue();
-                HashMap<String, Double> longevityMap = parseData(longevityData);
-
-                List<Map.Entry<String, Double>> sortedData = new ArrayList<>(longevityMap.entrySet());
-
-                sortedData.sort((entry1, entry2) -> entry2.getValue().compareTo(entry1.getValue()));
-
-                longevity = sortedData.get(0).getKey();
-            }
-
             // sillage (String)
             cell = row.getCell(7);
             if (null != cell) {
@@ -160,7 +145,6 @@ public class ExcelParser {
                     .notes(notes)
                     .rating(rating)
                     .forGender(changeGender(for_gender))
-                    .longevity(changeLongevity(longevity))
                     .sillage(Sillage.valueOf(sillage.toUpperCase().replace(" ", "_")))
                     .priceValue(PriceValue.valueOf(price_value.toUpperCase().replace(" ", "_")))
                     .perfumeImage(perfume_image)
@@ -188,21 +172,6 @@ public class ExcelParser {
         }
         return ForGender.valueOf(forGender.toUpperCase().replace(" ", "_"));
     }
-
-    private Longevity changeLongevity(String longevity) {
-        if (longevity.equals("very weak")) {
-            return Longevity.VERY_WEAK;
-        }
-        if (longevity.equals("long lasting")) {
-            return Longevity.LONG_LASTING;
-        }
-        return Longevity.valueOf(longevity.toUpperCase().replace(" ", "_"));
-    }
-
-
-
-
-
 
     private Map<String, Double> sortData(HashMap<String, Double> input) {
         return input.entrySet().stream().sorted(Map.Entry.<String, Double>comparingByValue().reversed())
