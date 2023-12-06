@@ -24,6 +24,12 @@ public class ResponsePerfumeListDto {
     @Schema(description = "향수 사용 성별", example = "남성")
     private final String forGender;
 
+    @Schema(description = "향수 지속성", example = "LONG_LASTING")
+    private final String longevity;
+
+    @Schema(description = "향수 잔향", example = "남성")
+    private final String sillage;
+
     @Schema(description = "향수 썸네일 이미지 경로", example = "https://www.naver.com")
     private final String thumbnailUrl;
 
@@ -33,6 +39,8 @@ public class ResponsePerfumeListDto {
         this.company = perfume.getCompany();
         this.rating = perfume.getRating();
         this.forGender = messageSource.getMessage("perfume.for-gender." + perfume.getForGender().name().toLowerCase(), null, LocaleContextHolder.getLocale());
+        this.sillage = messageSource.getMessage("perfume.sillage." + perfume.getSillage().name().toLowerCase(), null, LocaleContextHolder.getLocale());
+        this.longevity = messageSource.getMessage("perfume.longevity." + perfume.getLongevity().name().toLowerCase(), null, LocaleContextHolder.getLocale());
         this.thumbnailUrl = perfume.getThumbnailImage();
     }
 
