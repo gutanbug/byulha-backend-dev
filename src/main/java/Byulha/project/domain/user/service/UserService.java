@@ -117,6 +117,7 @@ public class UserService {
                 .build();
 
         List<Map.Entry<String, String>> result = djangoService.sendToDjango(requestDto);
+        System.out.println(result);
 
         StringBuilder categoryName = new StringBuilder();
         for (Map.Entry<String, String> entry : result) {
@@ -147,5 +148,18 @@ public class UserService {
         ImageFile imageFile = imageFileRepository.findImageFileWithUserId(dto.getImageName(), userId).orElseThrow(ImageNotFoundException::new);
         amazonS3Service.deleteFile(imageFile.getFileId());
         imageFileRepository.delete(imageFile);
+    }
+
+    @Transactional
+    public Page<ResponsePerfumeListDto> uploadImageTest(Long userId, RequestUploadFileDto dto, Pageable pageable) throws Exception{
+
+        PerfumeCategory category = perfumeCategoryRepository.findByCategoryName("SPORTY")
+                .orElseThrow(PerfumeCategoryNotFoundException::new);
+
+        String[] split = category.getNotes().split(",");
+
+        Page<Perfume> perfumeResult = perfumeRepository.findAllWithNotesOrderByLength(split[0], split[1],
+                split[2], split[3], split[4], split[5], split[6], split[7], pageable);
+        return perfumeResult.map(perfume -> new ResponsePerfumeListDto(perfume, messageSource));
     }
 }

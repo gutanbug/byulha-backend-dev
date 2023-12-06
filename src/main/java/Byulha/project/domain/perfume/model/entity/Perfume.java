@@ -45,13 +45,13 @@ public class Perfume extends BaseEntity {
     private ForGender forGender;
 
     @Enumerated(EnumType.STRING)
+    private Longevity longevity;
+
+    @Enumerated(EnumType.STRING)
     private Sillage sillage;
 
     @Enumerated(EnumType.STRING)
     private PriceValue priceValue;
-
-    @Enumerated(EnumType.STRING)
-    private Longevity longevity;
 
     @NotNull
     private String perfumeImage;

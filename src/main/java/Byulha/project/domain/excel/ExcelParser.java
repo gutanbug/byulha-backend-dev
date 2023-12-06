@@ -44,8 +44,8 @@ public class ExcelParser {
             String for_gender = "";
             double rating = 0;
             String notes = "";
-            String longevity ="";
             String sillage = "";
+            String longevity = "";
             String price_value = "";
             String perfume_image = "";
             String thumbnail_image = "";
@@ -160,8 +160,8 @@ public class ExcelParser {
                     .notes(notes)
                     .rating(rating)
                     .forGender(changeGender(for_gender))
-                    .longevity(changeLongevity(longevity))
                     .sillage(Sillage.valueOf(sillage.toUpperCase().replace(" ", "_")))
+                    .longevity(changeLongevity(longevity))
                     .priceValue(PriceValue.valueOf(price_value.toUpperCase().replace(" ", "_")))
                     .perfumeImage(perfume_image)
                     .thumbnailImage(thumbnail_image)
@@ -193,16 +193,11 @@ public class ExcelParser {
         if (longevity.equals("very weak")) {
             return Longevity.VERY_WEAK;
         }
-        if (longevity.equals("long lasting")) {
+        else if (longevity.equals("long lasting")) {
             return Longevity.LONG_LASTING;
         }
         return Longevity.valueOf(longevity.toUpperCase().replace(" ", "_"));
     }
-
-
-
-
-
 
     private Map<String, Double> sortData(HashMap<String, Double> input) {
         return input.entrySet().stream().sorted(Map.Entry.<String, Double>comparingByValue().reversed())

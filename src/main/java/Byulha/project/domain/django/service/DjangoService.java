@@ -41,7 +41,7 @@ public class DjangoService {
 //            "category_name" : category_name
 //        }
 
-        String url = "http://127.0.0.1:8082/receive_string";
+        String url = "http://127.0.0.1:8082/receive_string/";
 
         if (restTemplate.postForObject(url, entity, String.class) == null) {
             throw new CannotConnectToPythonServerException();
