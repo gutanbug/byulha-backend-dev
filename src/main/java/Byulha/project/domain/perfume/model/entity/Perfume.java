@@ -53,9 +53,6 @@ public class Perfume extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private PriceValue priceValue;
 
-    @Enumerated(EnumType.STRING)
-    private Longevity longevity;
-
     @NotNull
     private String perfumeImage;
 
@@ -72,7 +69,6 @@ public class Perfume extends BaseEntity {
                     @NotNull Sillage sillage,
                     @NotNull Longevity longevity,
                     @NotNull PriceValue priceValue,
-                    @NotNull Longevity longevity,
                     @NotNull String perfumeImage,
                     @NotNull String thumbnailImage) {
         this.perfumeUrl = perfumeUrl;
