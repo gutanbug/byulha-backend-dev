@@ -27,6 +27,7 @@ public class ResponsePerfumeDetailDto {
     private final String priceValue;
 
     private final String perfumeImage;
+    private final String longevity;
 
     public ResponsePerfumeDetailDto(Perfume perfume, List<String> notesList, MessageSource messageSource) {
         this.perfumeUrl = perfume.getPerfumeUrl();
@@ -36,6 +37,7 @@ public class ResponsePerfumeDetailDto {
         this.rating = String.valueOf(perfume.getRating());
         this.forGender = messageSource.getMessage("perfume.for-gender." + perfume.getForGender().name().toLowerCase(), null, LocaleContextHolder.getLocale());
         this.sillage = messageSource.getMessage("perfume.sillage." + perfume.getSillage().name().toLowerCase(), null, LocaleContextHolder.getLocale());
+        this.longevity = messageSource.getMessage("perfume.longevity." + perfume.getLongevity().name().toLowerCase(), null, LocaleContextHolder.getLocale());
         this.priceValue = messageSource.getMessage("perfume.price-value." + perfume.getPriceValue().name().toLowerCase(), null, LocaleContextHolder.getLocale());
         this.perfumeImage = perfume.getPerfumeImage();
     }
