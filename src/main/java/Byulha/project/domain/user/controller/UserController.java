@@ -159,9 +159,12 @@ public class UserController {
      * 추천된 분위기로 향수 조회하기 (프론트 테스트용)
      * <p>카테고리는 SPORTY로 고정하여 데이터를 스프링에서 추출한다. 단, AI 서버와 파이썬 서버는 거치지 않는다.</p>
      */
-    @PostMapping("/upload/image-test")
-    public ResponsePage<ResponsePerfumeListDto> uploadImageTest(@ParameterObject Pageable pageable) throws Exception{
-        Page<ResponsePerfumeListDto> testResult = userService.uploadImageTest(pageable);
+    @UserAuth
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE, value = "/upload/image-test")
+    public ResponsePage<ResponsePerfumeListDto> uploadImageTest(AppAuthentication auth,
+                                                                @Valid @ModelAttribute RequestUploadFileDto dto,
+                                                                @ParameterObject Pageable pageable) throws Exception{
+        Page<ResponsePerfumeListDto> testResult = userService.uploadImageTest(auth.getUserId(), dto, pageable);
         return new ResponsePage<>(testResult);
     }
 }

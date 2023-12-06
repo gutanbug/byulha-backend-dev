@@ -151,7 +151,7 @@ public class UserService {
     }
 
     @Transactional
-    public Page<ResponsePerfumeListDto> uploadImageTest(Pageable pageable) throws Exception{
+    public Page<ResponsePerfumeListDto> uploadImageTest(Long userId, RequestUploadFileDto dto, Pageable pageable) throws Exception{
 
         PerfumeCategory category = perfumeCategoryRepository.findByCategoryName("SPORTY")
                 .orElseThrow(PerfumeCategoryNotFoundException::new);
