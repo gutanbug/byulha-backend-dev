@@ -24,10 +24,12 @@ public class ResponsePerfumeDetailDto {
 
     private final String sillage;
 
+    private final String longevity;
+
     private final String priceValue;
 
     private final String perfumeImage;
-    private final String longevity;
+
 
     public ResponsePerfumeDetailDto(Perfume perfume, List<String> notesList, MessageSource messageSource) {
         this.perfumeUrl = perfume.getPerfumeUrl();
