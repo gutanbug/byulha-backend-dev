@@ -4,6 +4,8 @@ import Byulha.project.domain.perfume.model.PerfumeSpec;
 import Byulha.project.domain.perfume.model.dto.response.ResponsePerfumeDetailDto;
 import Byulha.project.domain.perfume.model.dto.response.ResponsePerfumeListDto;
 import Byulha.project.domain.perfume.model.entity.Perfume;
+import Byulha.project.domain.perfume.model.entity.PerfumeCategory;
+import Byulha.project.domain.perfume.repository.PerfumeCategoryRepository;
 import Byulha.project.domain.perfume.repository.PerfumeRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -13,22 +15,29 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 @Service
 @RequiredArgsConstructor
 @Slf4j
 public class PerfumeService {
 
     private final PerfumeRepository perfumeRepository;
+    private final PerfumeCategoryRepository perfumeCategoryRepository;
     private final MessageSource messageSource;
 
     public Page<ResponsePerfumeListDto> getPerfumeList(String forGender,
                                                        String sillage,
-                                                       String priceValue,
+                                                       String longevity,
                                                        boolean isDesc,
                                                        Pageable pageable) {
         Specification<Perfume> spec = PerfumeSpec.withForGender(forGender);
-        spec = spec.and(PerfumeSpec.withSillage(sillage));
-        spec = spec.and(PerfumeSpec.withPriceValue(priceValue));
+        spec = spec.and(PerfumeSpec.withSilage(sillage));
+        spec = spec.and(PerfumeSpec.withLongevity(longevity));
         spec = spec.and(PerfumeSpec.withIsDesc(isDesc));
 
         return getResponsePerfumeListDto(pageable, spec);
@@ -45,7 +54,48 @@ public class PerfumeService {
 
     public ResponsePerfumeDetailDto getPerfumeDetail(Long perfumeId) {
         Perfume perfume = perfumeRepository.findOneById(perfumeId);
-        return new ResponsePerfumeDetailDto(perfume, messageSource);
+        List<String> notesList = Arrays.stream(perfume.getNotes().trim()
+                .split(",")).collect(Collectors.toList());
+
+        return new ResponsePerfumeDetailDto(perfume, notesList, messageSource);
     }
 
+    public Set<String> getNotes() {
+        Set<String> uniqueStrings = new HashSet<>();
+
+        List<String> notesList = perfumeRepository.findAllWithNotes();
+        for (String notes : notesList) {
+            String[] split = notes.split(",");
+            for (String note : split) {
+                uniqueStrings.add(note.trim());
+            }
+        }
+        return uniqueStrings;
+    }
+
+    public void createPerfumeCategory() {
+        //TODO : 카테고리 이름, 노트 종류대로 리스트화해서 한 번에 DB에 넣는 서비스 로직 추가
+        List<String> categoryName = Arrays.asList("CUTE", "SENSUAL", "INNOCENT", "ELEGANT", "ANDROGYNOUS", "SEXY",
+                                                "SPORTY", "PROFOUND", "MANLY", "SOPHISTICATED", "CASUAL");
+        List<String> categoryNotes = Arrays.asList(
+                "Citrus,Sour,Fruity,Cherry,Nutty,Yellow Floral,Lavender,Violet",
+                "Tuberose,White Floral,Iris,Rose,Warm Spicy,Cacao,Vanilla,Caramel",
+                "Lavender,Iris,Violet,Floral,Herbal,Green,Honey,Sweet",
+                "Yellow Floral,Tuberose,White Floral,Rose,Cinnamon,Soft Spicy,Wood,Vanilla",
+                "Aromatic,Mossy,Earthy,Green,Woody,Musk,Leather,Aquatic",
+                "Warm Spicy,Soft Spicy,Vanilla,Caramel,Animalic,Amber,Musk,Woody",
+                "Aromatic,Conifer,Marine,Mineral,Green,Aquatic,Citrus,Fruity",
+                "Cinnamon,Oud,Woody,Amber,Musk,Leather,Vanilla,Tobacco",
+                "Animalic,Leather,Rum,Whiskey,Woody,Iris,Cacao,Lavender",
+                "Citrus,Green,Herbal,Mineral,Aldehydic,Woody,Musk,Vanilla",
+                "Aromatic,Green,Herbal,Beverage,Nutty,Honey,Sweet,Vanilla"
+        );
+        for (int i = 0; i < categoryName.size(); i++) {
+            PerfumeCategory perfumeCategory = PerfumeCategory.builder()
+                    .categoryName(categoryName.get(i))
+                    .notes(categoryNotes.get(i))
+                    .build();
+            perfumeCategoryRepository.save(perfumeCategory);
+        }
+    }
 }

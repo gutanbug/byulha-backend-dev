@@ -48,6 +48,9 @@ public class User extends BaseEntity {
     @OneToMany(mappedBy = "user", cascade = CascadeType.PERSIST, orphanRemoval = true)
     private List<ImageFile> files = new ArrayList<>();
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.PERSIST, orphanRemoval = true)
+    private List<ImageResult> results = new ArrayList<>();
+
     @Enumerated(EnumType.STRING)
     private UserRole userRole;
 

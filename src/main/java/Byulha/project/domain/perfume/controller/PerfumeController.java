@@ -11,6 +11,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Set;
+
 
 @RestController
 @RequiredArgsConstructor
@@ -20,7 +22,6 @@ public class PerfumeController {
 
     private final PerfumeService perfumeService;
 
-    //TODO 향수 필터링도 포함하여 같이 구현
     /**
      * 향수 목록 전체 조회
      *
@@ -29,11 +30,11 @@ public class PerfumeController {
      */
     @GetMapping
     public ResponsePage<ResponsePerfumeListDto> getPerfumeList(@RequestParam(name = "FOR_MEN",required = false) String forGender,
-                                                               @RequestParam(name = "MODERATE",required = false) String sillage,
-                                                               @RequestParam(name = "OVERPRICED",required = false) String priceValue,
+                                                               @RequestParam(name = "Sillage",required = false) String sillage,
+                                                               @RequestParam(name = "Longevity",required = false) String longevity,
                                                                @RequestParam(name = "isDesc", required = false) boolean isDesc,
                                                                @ParameterObject Pageable pageable) {
-        Page<ResponsePerfumeListDto> list = perfumeService.getPerfumeList(forGender, sillage, priceValue, isDesc,pageable);
+        Page<ResponsePerfumeListDto> list = perfumeService.getPerfumeList(forGender, sillage, longevity, isDesc,pageable);
         return new ResponsePage<>(list);
     }
 
@@ -47,4 +48,24 @@ public class PerfumeController {
     public ResponsePerfumeDetailDto getPerfumeDetail(@PathVariable Long perfumeId) {
         return perfumeService.getPerfumeDetail(perfumeId);
     }
+
+    /**
+     * 겹치지 않는 향수 노트 조회
+     */
+    @GetMapping("/notes")
+    public Set<String> getNotes() {
+        return perfumeService.getNotes();
+    }
+
+    /**
+     * 향수 카테고리 생성(프론트X)
+     *
+     * 이 메서드는 한 번만 실행하면 되므로 실행 이후에는 사용하지 않는다.
+     */
+    @GetMapping("/create/category")
+    public void createPerfumeCategory() {
+        perfumeService.createPerfumeCategory();
+    }
+
+
 }

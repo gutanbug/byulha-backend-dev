@@ -1,5 +1,6 @@
 package Byulha.project.domain.user.controller;
 
+import Byulha.project.domain.perfume.model.dto.response.ResponsePerfumeListDto;
 import Byulha.project.domain.user.model.dto.request.*;
 import Byulha.project.domain.user.model.dto.response.*;
 import Byulha.project.domain.user.service.SignupService;
@@ -7,10 +8,14 @@ import Byulha.project.domain.user.service.UserFindService;
 import Byulha.project.domain.user.service.UserService;
 import Byulha.project.global.auth.jwt.AppAuthentication;
 import Byulha.project.global.auth.role.UserAuth;
+import Byulha.project.global.model.dto.ResponsePage;
 import Byulha.project.infra.s3.model.dto.request.RequestUploadFileDto;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springdoc.api.annotations.ParameterObject;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
@@ -135,17 +140,18 @@ public class UserController {
     }
 
     /**
-     * 이미지 업로드
-     *
-     * AWS S3에 사용자가 원하는 이미지를 업로드합니다.
+     * 이미지 업로드 후 향수 추천 받기
+     * <p>이미지를 업로드하고 Django 서버에서 AI 분석을 통한 결과로 향수를 추천 받습니다.</p>
      *
      * @param auth         인증 정보
      * @param dto          요청 body
      */
     @UserAuth
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE, value = "/upload/image")
-    public void uploadImage(AppAuthentication auth,
-                            @Valid @ModelAttribute RequestUploadFileDto dto) {
-        userService.uploadImage(auth.getUserId(), dto);
+    public ResponsePage<ResponsePerfumeListDto> uploadImage(AppAuthentication auth,
+                                                            @Valid @ModelAttribute RequestUploadFileDto dto,
+                                                            @ParameterObject Pageable pageable) throws Exception{
+        Page<ResponsePerfumeListDto> list = userService.uploadImage(auth.getUserId(), dto, pageable);
+        return new ResponsePage<>(list);
     }
 }

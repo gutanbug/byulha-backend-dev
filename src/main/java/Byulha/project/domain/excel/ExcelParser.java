@@ -2,6 +2,7 @@ package Byulha.project.domain.excel;
 
 import Byulha.project.domain.excel.model.dto.request.RequestExcelDto;
 import Byulha.project.domain.perfume.model.ForGender;
+import Byulha.project.domain.perfume.model.Longevity;
 import Byulha.project.domain.perfume.model.PriceValue;
 import Byulha.project.domain.perfume.model.Sillage;
 import Byulha.project.domain.perfume.model.entity.Perfume;
@@ -9,6 +10,7 @@ import Byulha.project.domain.perfume.repository.PerfumeRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.openxml4j.opc.OPCPackage;
+import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -16,6 +18,8 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 @Service
@@ -31,7 +35,7 @@ public class ExcelParser {
 
         XSSFSheet sheet = workbook.getSheetAt(0);
 
-        for(int i=1; i<318; i++) {
+        for(int i=1;i <637; i++){
             XSSFRow row = sheet.getRow(i);
 
             String link = "";
@@ -40,11 +44,11 @@ public class ExcelParser {
             String for_gender = "";
             double rating = 0;
             String notes = "";
+            String longevity ="";
             String sillage = "";
             String price_value = "";
-
-
-            List<String> excelData= new ArrayList<>();
+            String perfume_image = "";
+            String thumbnail_image = "";
 
             // link (String)
             XSSFCell cell = row.getCell(0);
@@ -54,7 +58,9 @@ public class ExcelParser {
 
             // name (String)
             cell = row.getCell(1);
-            if (null != cell) {
+            if (null != cell && cell.getCellType() == CellType.NUMERIC) {
+                name = String.valueOf(cell.getNumericCellValue());
+            } else if(null != cell && cell.getCellType() == CellType.STRING) {
                 name = cell.getStringCellValue();
             }
 
@@ -88,12 +94,25 @@ public class ExcelParser {
 
                 StringBuilder resultNotes = new StringBuilder();
                 for (int j=0; j<sortedData.size(); j++) {
-                    resultNotes.append(sortedData.get(j).getKey());
+                    resultNotes.append(sortedData.get(j).getKey()).append(":").append(sortedData.get(j).getValue());
                     if (j != sortedData.size() - 1) {
                         resultNotes.append(",");
                     }
                 }
                 notes = resultNotes.toString();
+            }
+
+            // Longevity (String)
+            cell = row.getCell(6);
+            if (null != cell) {
+                String longevityData = cell.getStringCellValue();
+                HashMap<String, Double> longevityMap = parseData(longevityData);
+
+                List<Map.Entry<String, Double>> sortedData = new ArrayList<>(longevityMap.entrySet());
+
+                sortedData.sort((entry1, entry2) -> entry2.getValue().compareTo(entry1.getValue()));
+
+                longevity = sortedData.get(0).getKey();
             }
 
             // sillage (String)
@@ -122,6 +141,18 @@ public class ExcelParser {
                 price_value = sortedData.get(0).getKey();
             }
 
+            // perfume image (String)
+            cell = row.getCell(0);
+            if (null != cell) {
+                String perfumeUrl = cell.getStringCellValue();
+                String perfumeNum = extractNumberFromUrl(perfumeUrl);
+                perfume_image = "https://fimgs.net/mdimg/perfume/375x500." + perfumeNum + ".jpg";
+
+                thumbnail_image = "https://fimgs.net/mdimg/perfume/m." + perfumeNum + ".jpg";
+            }
+
+            // thumbnail image (String)
+
             Perfume perfume = Perfume.builder()
                     .perfumeUrl(link)
                     .name(name)
@@ -129,12 +160,25 @@ public class ExcelParser {
                     .notes(notes)
                     .rating(rating)
                     .forGender(changeGender(for_gender))
+                    .longevity(changeLongevity(longevity))
                     .sillage(Sillage.valueOf(sillage.toUpperCase().replace(" ", "_")))
                     .priceValue(PriceValue.valueOf(price_value.toUpperCase().replace(" ", "_")))
+                    .perfumeImage(perfume_image)
+                    .thumbnailImage(thumbnail_image)
                     .build();
 
             perfumeRepository.save(perfume);
-            log.info("perfume: {}", perfume);
+        }
+    }
+
+    private String extractNumberFromUrl(String perfumeUrl) {
+        Pattern pattern = Pattern.compile(("-(\\d+)\\.html"));
+        Matcher matcher = pattern.matcher(perfumeUrl);
+
+        if (matcher.find()) {
+            return String.valueOf(matcher.group(1));
+        } else {
+            throw new IllegalArgumentException("No number found in the URL");
         }
     }
 
@@ -145,12 +189,27 @@ public class ExcelParser {
         return ForGender.valueOf(forGender.toUpperCase().replace(" ", "_"));
     }
 
+    private Longevity changeLongevity(String longevity) {
+        if (longevity.equals("very weak")) {
+            return Longevity.VERY_WEAK;
+        }
+        if (longevity.equals("long lasting")) {
+            return Longevity.LONG_LASTING;
+        }
+        return Longevity.valueOf(longevity.toUpperCase().replace(" ", "_"));
+    }
+
+
+
+
+
+
     private Map<String, Double> sortData(HashMap<String, Double> input) {
         return input.entrySet().stream().sorted(Map.Entry.<String, Double>comparingByValue().reversed())
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, HashMap::new));
     }
 
-    private static HashMap<String, Double> parseData(String input) {
+    private HashMap<String, Double> parseData(String input) {
         HashMap<String, Double> data = new HashMap<>();
         int startIndex = input.indexOf("{");
         int endIndex = input.indexOf("}");
