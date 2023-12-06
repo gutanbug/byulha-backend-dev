@@ -30,11 +30,11 @@ public class PerfumeController {
      */
     @GetMapping
     public ResponsePage<ResponsePerfumeListDto> getPerfumeList(@RequestParam(name = "FOR_MEN",required = false) String forGender,
-                                                               @RequestParam(name = "MODERATE",required = false) String sillage,
-                                                               @RequestParam(name = "OVERPRICED",required = false) String priceValue,
+                                                               @RequestParam(name = "Sillage",required = false) String sillage,
+                                                               @RequestParam(name = "Longevity",required = false) String longevity,
                                                                @RequestParam(name = "isDesc", required = false) boolean isDesc,
                                                                @ParameterObject Pageable pageable) {
-        Page<ResponsePerfumeListDto> list = perfumeService.getPerfumeList(forGender, sillage, priceValue, isDesc,pageable);
+        Page<ResponsePerfumeListDto> list = perfumeService.getPerfumeList(forGender, sillage, longevity, isDesc,pageable);
         return new ResponsePage<>(list);
     }
 
@@ -66,4 +66,6 @@ public class PerfumeController {
     public void createPerfumeCategory() {
         perfumeService.createPerfumeCategory();
     }
+
+
 }

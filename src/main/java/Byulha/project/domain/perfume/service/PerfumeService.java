@@ -32,12 +32,12 @@ public class PerfumeService {
 
     public Page<ResponsePerfumeListDto> getPerfumeList(String forGender,
                                                        String sillage,
-                                                       String priceValue,
+                                                       String longevity,
                                                        boolean isDesc,
                                                        Pageable pageable) {
         Specification<Perfume> spec = PerfumeSpec.withForGender(forGender);
-        spec = spec.and(PerfumeSpec.withSillage(sillage));
-        spec = spec.and(PerfumeSpec.withPriceValue(priceValue));
+        spec = spec.and(PerfumeSpec.withSilage(sillage));
+        spec = spec.and(PerfumeSpec.withLongevity(longevity));
         spec = spec.and(PerfumeSpec.withIsDesc(isDesc));
 
         return getResponsePerfumeListDto(pageable, spec);
