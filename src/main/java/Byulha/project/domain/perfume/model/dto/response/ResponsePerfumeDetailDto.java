@@ -30,6 +30,8 @@ public class ResponsePerfumeDetailDto {
 
     private final String perfumeImage;
 
+    private final String perfumeDetail;
+
 
     public ResponsePerfumeDetailDto(Perfume perfume, List<String> notesList, MessageSource messageSource) {
         this.perfumeUrl = perfume.getPerfumeUrl();
@@ -42,5 +44,6 @@ public class ResponsePerfumeDetailDto {
         this.longevity = messageSource.getMessage("perfume.longevity." + perfume.getLongevity().name().toLowerCase(), null, LocaleContextHolder.getLocale());
         this.priceValue = messageSource.getMessage("perfume.price-value." + perfume.getPriceValue().name().toLowerCase(), null, LocaleContextHolder.getLocale());
         this.perfumeImage = perfume.getPerfumeImage();
+        this.perfumeDetail = perfume.getPerfumeDetail();
     }
 }
