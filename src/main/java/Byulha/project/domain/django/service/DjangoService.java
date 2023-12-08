@@ -33,12 +33,20 @@ public class DjangoService {
 
         HttpEntity<String> entity = new HttpEntity<String>(param , headers);
 
-//      Django 서버에서 올 데이터 형식
+//      Django 서버에서 올 데이터 형식(기존)
 //        response =
 //        {
 //            "nickname": nickname,
 //            "fileId" : fileId,
 //            "category_name" : category_name
+//        }
+
+//       분위기 모델을 통한 데이터 형식
+//        response =
+//        {
+//            "nickname": nickname,
+//            "fileId" : fileId,
+//            "category_percent" : 'SPORTY:50,asdf:49.7,werscv:30'
 //        }
 
 //        localhost에서 테스트할 때 ip 주소
