@@ -18,7 +18,7 @@ public class ResponsePerfumeDetailDto {
 
     private final List<String> notes;
 
-    private final String rating;
+    private final double rating;
 
     private final String forGender;
 
@@ -38,7 +38,7 @@ public class ResponsePerfumeDetailDto {
         this.name = perfume.getName();
         this.company = perfume.getCompany();
         this.notes = notesList;
-        this.rating = String.valueOf(perfume.getRating());
+        this.rating = perfume.getRating();
         this.forGender = messageSource.getMessage("perfume.for-gender." + perfume.getForGender().name().toLowerCase(), null, LocaleContextHolder.getLocale());
         this.sillage = messageSource.getMessage("perfume.sillage." + perfume.getSillage().name().toLowerCase(), null, LocaleContextHolder.getLocale());
         this.longevity = messageSource.getMessage("perfume.longevity." + perfume.getLongevity().name().toLowerCase(), null, LocaleContextHolder.getLocale());
