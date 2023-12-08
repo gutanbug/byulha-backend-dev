@@ -178,6 +178,10 @@ public class UserService {
 
         Page<Perfume> perfumesFromTop3Notes = perfumeRepository.findAllByTop3Notes(top3notes.get(0), top3notes.get(1), top3notes.get(2), pageable);
 
+        if(perfumesFromTop3Notes.isEmpty()) {
+            perfumesFromTop3Notes = perfumeRepository.findAllByTop2Notes(top3notes.get(0), top3notes.get(1), pageable);
+        }
+
         HashMap<String, Double> indexSumMap = new HashMap<>();
         for(Perfume perfume : perfumesFromTop3Notes) {
             double indexSum = 0;
@@ -207,8 +211,6 @@ public class UserService {
             Perfume perfume = perfumeRepository.findByPerfumeName(name).orElseThrow(UserNotFoundException::new);
             fivePerfume.add(perfume);
         }
-
-
 
         return fivePerfume.stream().map(perfume -> new ResponsePerfumeAIListDto(perfume, messageSource, category.split("-"))).collect(Collectors.toList());
     }
