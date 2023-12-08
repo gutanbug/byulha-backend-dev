@@ -2,7 +2,6 @@ package Byulha.project.domain.perfume.service;
 
 import Byulha.project.domain.perfume.model.PerfumeSpec;
 import Byulha.project.domain.perfume.model.dto.response.ResponsePerfumeDetailDto;
-import Byulha.project.domain.perfume.model.dto.response.ResponsePerfumeKeywordDto;
 import Byulha.project.domain.perfume.model.dto.response.ResponsePerfumeListDto;
 import Byulha.project.domain.perfume.model.entity.Perfume;
 import Byulha.project.domain.perfume.model.entity.PerfumeCategory;
@@ -65,14 +64,16 @@ public class PerfumeService {
         return new ResponsePerfumeDetailDto(perfume, notesList, messageSource);
     }
 
-    public Set<String> getNotes() {
+    public Set<String> getUniqueNotes() {
         Set<String> uniqueStrings = new HashSet<>();
 
         List<String> notesList = perfumeRepository.findAllWithNotes();
-        for (String notes : notesList) {
-            String[] split = notes.split(",");
-            for (String note : split) {
-                uniqueStrings.add(note.trim());
+
+        for(String note : notesList) {
+            String[] split = note.split(",");
+            for(String s: split) {
+                String[] notes = s.split(":");
+                uniqueStrings.add(notes[0].trim());
             }
         }
         return uniqueStrings;
@@ -86,13 +87,13 @@ public class PerfumeService {
                 "Citrus,Sour,Fruity,Cherry,Nutty,Yellow Floral,Lavender,Violet",
                 "Tuberose,White Floral,Iris,Rose,Warm Spicy,Cacao,Vanilla,Caramel",
                 "Lavender,Iris,Violet,Floral,Herbal,Green,Honey,Sweet",
-                "Yellow Floral,Tuberose,White Floral,Rose,Cinnamon,Soft Spicy,Wood,Vanilla",
-                "Aromatic,Mossy,Earthy,Green,Woody,Musk,Leather,Aquatic",
-                "Warm Spicy,Soft Spicy,Vanilla,Caramel,Animalic,Amber,Musk,Woody",
+                "Yellow Floral,Tuberose,White Floral,Rose,Cinnamon,Soft Spicy,Woody,Vanilla",
+                "Aromatic,Mossy,Earthy,Green,Woody,Musky,Leather,Aquatic",
+                "Warm Spicy,Soft Spicy,Vanilla,Caramel,Animalic,Amber,Musky,Woody",
                 "Aromatic,Conifer,Marine,Mineral,Green,Aquatic,Citrus,Fruity",
-                "Cinnamon,Oud,Woody,Amber,Musk,Leather,Vanilla,Tobacco",
+                "Cinnamon,Oud,Woody,Amber,Musky,Leather,Vanilla,Tobacco",
                 "Animalic,Leather,Rum,Whiskey,Woody,Iris,Cacao,Lavender",
-                "Citrus,Green,Herbal,Mineral,Aldehydic,Woody,Musk,Vanilla",
+                "Citrus,Green,Herbal,Mineral,Aldehydic,Woody,Musky,Vanilla",
                 "Aromatic,Green,Herbal,Beverage,Nutty,Honey,Sweet,Vanilla"
         );
         for (int i = 0; i < categoryName.size(); i++) {
