@@ -59,6 +59,9 @@ public class Perfume extends BaseEntity {
     @NotNull
     private String thumbnailImage;
 
+    @Lob
+    private String perfumeDetail;
+
     @Builder
     private Perfume(@NotNull String perfumeUrl,
                     @NotNull String name,
@@ -70,7 +73,8 @@ public class Perfume extends BaseEntity {
                     @NotNull Longevity longevity,
                     @NotNull PriceValue priceValue,
                     @NotNull String perfumeImage,
-                    @NotNull String thumbnailImage) {
+                    @NotNull String thumbnailImage,
+                    String perfumeDetail) {
         this.perfumeUrl = perfumeUrl;
         this.name = name;
         this.company = company;
@@ -82,5 +86,6 @@ public class Perfume extends BaseEntity {
         this.longevity = longevity;
         this.perfumeImage = perfumeImage;
         this.thumbnailImage = thumbnailImage;
+        this.perfumeDetail = perfumeDetail;
     }
 }
