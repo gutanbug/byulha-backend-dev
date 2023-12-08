@@ -24,36 +24,25 @@ public class DjangoService {
     private final ObjectMapper objectMapper;
 
     @Transactional
-    public List<Map.Entry<String, String>> sendToDjango(RequestSendToDjangoDto dto) throws JsonProcessingException {
+    public List<Map.Entry<String, String>> sendToDjangoForMood(RequestSendToDjangoDto dto) throws JsonProcessingException {
         RestTemplate restTemplate = new RestTemplate();
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         String param = objectMapper.writeValueAsString(dto);
 
-        HttpEntity<String> entity = new HttpEntity<String>(param , headers);
+        HttpEntity<String> entity = new HttpEntity<String>(param, headers);
 
-//      Django 서버에서 올 데이터 형식(기존)
-//        response =
-//        {
-//            "nickname": nickname,
-//            "fileId" : fileId,
-//            "category_name" : category_name
-//        }
-
-//       분위기 모델을 통한 데이터 형식
+//        분위기 모델을 통한 데이터 형식
 //        response =
 //        {
 //            "nickname": nickname,
 //            "fileId" : fileId,
 //            "category_percent" : 'SPORTY:50,asdf:49.7,werscv:30'
 //        }
-
-//        localhost에서 테스트할 때 ip 주소
-//        String url = "http://127.0.0.1:8082/receive_string/";
-
-//        서버에서 테스트할 때 ip 주소
         String url = "http://172.20.0.5:8082/receive_string/";
+//        String url = "http://43.202.217.33:8082/receive_string/";
+
 
         if (restTemplate.postForObject(url, entity, String.class) == null) {
             throw new CannotConnectToPythonServerException();

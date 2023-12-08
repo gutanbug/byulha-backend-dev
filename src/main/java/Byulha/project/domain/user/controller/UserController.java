@@ -1,5 +1,6 @@
 package Byulha.project.domain.user.controller;
 
+import Byulha.project.domain.perfume.model.dto.response.ResponsePerfumeAIListDto;
 import Byulha.project.domain.perfume.model.dto.response.ResponsePerfumeListDto;
 import Byulha.project.domain.user.model.dto.request.*;
 import Byulha.project.domain.user.model.dto.response.*;
@@ -23,6 +24,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
+import java.util.List;
 
 @Tag(name = "사용자", description = "사용자 관련 api")
 @RestController
@@ -148,11 +150,10 @@ public class UserController {
      */
     @UserAuth
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE, value = "/upload/image")
-    public ResponsePage<ResponsePerfumeListDto> uploadImage(AppAuthentication auth,
-                                                            @Valid @ModelAttribute RequestUploadFileDto dto,
-                                                            @ParameterObject Pageable pageable) throws Exception{
-        Page<ResponsePerfumeListDto> list = userService.uploadImage(auth.getUserId(), dto, pageable);
-        return new ResponsePage<>(list);
+    public List<ResponsePerfumeAIListDto> uploadImage(AppAuthentication auth,
+                                                      @Valid @ModelAttribute RequestUploadFileDto dto,
+                                                      @ParameterObject Pageable pageable) throws Exception{
+        return userService.uploadImage(auth.getUserId(), dto, pageable);
     }
 
     /**

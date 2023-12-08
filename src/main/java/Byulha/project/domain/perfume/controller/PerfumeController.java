@@ -1,7 +1,6 @@
 package Byulha.project.domain.perfume.controller;
 
 import Byulha.project.domain.perfume.model.dto.response.ResponsePerfumeDetailDto;
-import Byulha.project.domain.perfume.model.dto.response.ResponsePerfumeKeywordDto;
 import Byulha.project.domain.perfume.model.dto.response.ResponsePerfumeListDto;
 import Byulha.project.domain.perfume.service.PerfumeService;
 import Byulha.project.global.model.dto.ResponsePage;
@@ -57,7 +56,7 @@ public class PerfumeController {
      */
     @GetMapping("/notes")
     public Set<String> getNotes() {
-        return perfumeService.getNotes();
+        return perfumeService.getUniqueNotes();
     }
 
     /**
