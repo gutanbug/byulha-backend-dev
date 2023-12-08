@@ -1,6 +1,7 @@
 package Byulha.project.domain.perfume.controller;
 
 import Byulha.project.domain.perfume.model.dto.response.ResponsePerfumeDetailDto;
+import Byulha.project.domain.perfume.model.dto.response.ResponsePerfumeKeywordDto;
 import Byulha.project.domain.perfume.model.dto.response.ResponsePerfumeListDto;
 import Byulha.project.domain.perfume.service.PerfumeService;
 import Byulha.project.global.model.dto.ResponsePage;
@@ -29,12 +30,14 @@ public class PerfumeController {
      * @return 페이징된 향수 목록
      */
     @GetMapping
-    public ResponsePage<ResponsePerfumeListDto> getPerfumeList(@RequestParam(name = "FOR_MEN",required = false) String forGender,
+    public ResponsePage<ResponsePerfumeListDto> getPerfumeList(@RequestParam(name = "Name",required = false) String name,
+                                                               @RequestParam(name = "Company", required = false) String company,
+                                                               @RequestParam(name = "For_Gender",required = false) String forGender,
                                                                @RequestParam(name = "Sillage",required = false) String sillage,
                                                                @RequestParam(name = "Longevity",required = false) String longevity,
-                                                               @RequestParam(name = "isDesc", required = false) boolean isDesc,
+                                                               @RequestParam(name = "Rating", required = false) boolean isDesc,
                                                                @ParameterObject Pageable pageable) {
-        Page<ResponsePerfumeListDto> list = perfumeService.getPerfumeList(forGender, sillage, longevity, isDesc,pageable);
+        Page<ResponsePerfumeListDto> list = perfumeService.getPerfumeList(name,company,forGender, sillage, longevity, isDesc,pageable);
         return new ResponsePage<>(list);
     }
 
@@ -66,6 +69,4 @@ public class PerfumeController {
     public void createPerfumeCategory() {
         perfumeService.createPerfumeCategory();
     }
-
-
 }
