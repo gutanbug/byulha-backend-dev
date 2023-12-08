@@ -2,11 +2,13 @@ package Byulha.project.domain.user.service;
 
 import Byulha.project.domain.django.model.dto.request.RequestSendToDjangoDto;
 import Byulha.project.domain.django.service.DjangoService;
+import Byulha.project.domain.perfume.model.dto.response.ResponsePerfumeAIListDto;
 import Byulha.project.domain.perfume.model.dto.response.ResponsePerfumeListDto;
 import Byulha.project.domain.perfume.model.entity.Perfume;
 import Byulha.project.domain.perfume.model.entity.PerfumeCategory;
 import Byulha.project.domain.perfume.repository.PerfumeCategoryRepository;
 import Byulha.project.domain.perfume.repository.PerfumeRepository;
+import Byulha.project.domain.perfume.service.PerfumeService;
 import Byulha.project.domain.user.exception.ImageNotFoundException;
 import Byulha.project.domain.user.exception.PerfumeCategoryNotFoundException;
 import Byulha.project.domain.user.exception.UserNotFoundException;
@@ -42,6 +44,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.servlet.http.HttpServletRequest;
 import java.time.Instant;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional(readOnly = true)
@@ -61,6 +64,7 @@ public class UserService {
     private final PerfumeCategoryRepository perfumeCategoryRepository;
     private final ImageResultRepository imageResultRepository;
     private final AmazonS3Service amazonS3Service;
+    private final PerfumeService perfumeService;
     private final DjangoService djangoService;
 
     public ResponseLoginDto login(RequestLoginDto dto) {
@@ -92,7 +96,7 @@ public class UserService {
     }
 
     @Transactional
-    public Page<ResponsePerfumeListDto> uploadImage(Long userId, RequestUploadFileDto dto, Pageable pageable) throws Exception{
+    public List<ResponsePerfumeAIListDto> uploadImage(Long userId, RequestUploadFileDto dto, Pageable pageable) throws Exception{
         User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
 
         List<String> fileIdList = new ArrayList<>();
@@ -116,31 +120,97 @@ public class UserService {
                 .fileId(fileIdList.get(0))
                 .build();
 
-        List<Map.Entry<String, String>> result = djangoService.sendToDjango(requestDto);
-        System.out.println(result);
+        List<Map.Entry<String, String>> result = djangoService.sendToDjangoForMood(requestDto);
 
-        StringBuilder categoryName = new StringBuilder();
+        StringBuilder categoryPercent = new StringBuilder();
         for (Map.Entry<String, String> entry : result) {
-            if(entry.getKey().equals("category_name")) {
-                categoryName.append(entry.getValue());
+            if(entry.getKey().equals("category_percent")) {
+                categoryPercent.append(entry.getValue());
             }
         }
 
-        PerfumeCategory category = perfumeCategoryRepository.findByCategoryName(categoryName.toString())
+        Set<String> notes = perfumeService.getUniqueNotes();
+        HashMap<String, Double> notesMap = new HashMap<>();
+        for (String note: notes) {
+            notesMap.put(note, 0.0);
+        }
+
+        String category = categoryPercent.toString();
+        System.out.println(category);
+        String[] category_split = category.split("-");
+        for(String percentData : category_split){
+            String[] note_percent = percentData.split(":");
+            PerfumeCategory perfumeCategory = perfumeCategoryRepository.findByCategoryName(note_percent[0].toUpperCase())
+                    .orElseThrow(PerfumeCategoryNotFoundException::new);
+            String[] category_notes = perfumeCategory.getNotes().split(",");
+            for(String note : category_notes) {
+                for(String key: notesMap.keySet()) {
+                    if(note.toLowerCase().equals(key)){
+                        notesMap.put(key, notesMap.get(key) + Double.parseDouble(note_percent[1]));
+                        System.out.println(key + " : " + notesMap.get(key));
+                    }
+                }
+            }
+        }
+
+        Map<String, Double> sortedNotesMap = sortedMapDesc(notesMap);
+
+        List<String> top3notes = sortedNotesMap.entrySet().stream()
+                .limit(3)
+                .map(Map.Entry::getKey)
+                .collect(Collectors.toList());
+
+        System.out.println(top3notes);
+
+        String[] split1 = category.split("-");
+        String[] split2 = split1[0].split(":");
+        String top1categoryName = split2[0].toUpperCase();
+
+        PerfumeCategory top1category = perfumeCategoryRepository.findByCategoryName(top1categoryName)
                 .orElseThrow(PerfumeCategoryNotFoundException::new);
 
         ImageResult imageResult = ImageResult.builder()
                 .user(user)
                 .fileId(fileIdList.get(0))
-                .perfumeCategory(category)
+                .perfumeCategory(top1category)
                 .build();
         imageResultRepository.save(imageResult);
 
-        String[] split = category.getNotes().split(",");
+        Page<Perfume> perfumesFromTop3Notes = perfumeRepository.findAllByTop3Notes(top3notes.get(0), top3notes.get(1), top3notes.get(2), pageable);
 
-        Page<Perfume> perfumeResult = perfumeRepository.findAllWithNotesOrderByLength(split[0], split[1],
-                split[2], split[3], split[4], split[5], split[6], split[7], pageable);
-        return perfumeResult.map(perfume -> new ResponsePerfumeListDto(perfume, messageSource));
+        HashMap<String, Double> indexSumMap = new HashMap<>();
+        for(Perfume perfume : perfumesFromTop3Notes) {
+            double indexSum = 0;
+            for(String note : top3notes) {
+                String[] perfume_split = perfume.getNotes().split(",");
+                for(int i=0; i<perfume_split.length; i++) {
+                    if(perfume_split[i].contains(note)) {
+                        indexSum += i;
+                    }
+                }
+            }
+            indexSumMap.put(perfume.getName(), indexSum);
+            System.out.println(perfume.getName() + " : " + indexSum);
+        }
+
+        Map<String, Double> sortedIndexSumMap = sortedMapAsc(indexSumMap);
+
+        System.out.println(sortedIndexSumMap);
+
+        List<String> fivePerfumeName = sortedIndexSumMap.entrySet().stream()
+                .limit(5)
+                .map(Map.Entry::getKey)
+                .collect(Collectors.toList());
+
+        List<Perfume> fivePerfume = new ArrayList<>();
+        for(String name : fivePerfumeName) {
+            Perfume perfume = perfumeRepository.findByPerfumeName(name).orElseThrow(UserNotFoundException::new);
+            fivePerfume.add(perfume);
+        }
+
+
+
+        return fivePerfume.stream().map(perfume -> new ResponsePerfumeAIListDto(perfume, messageSource, category.split("-"))).collect(Collectors.toList());
     }
 
     @Transactional
@@ -162,4 +232,25 @@ public class UserService {
                 split[2], split[3], split[4], split[5], split[6], split[7], pageable);
         return perfumeResult.map(perfume -> new ResponsePerfumeListDto(perfume, messageSource));
     }
+
+    private Map<String, Double> sortedMapDesc(Map<String, Double> map) {
+        return map.entrySet().stream().sorted(Map.Entry.<String, Double>comparingByValue().reversed())
+                .collect(Collectors.toMap(
+                        Map.Entry::getKey,
+                        Map.Entry::getValue,
+                        (e1, e2) -> e1,
+                        LinkedHashMap::new
+                ));
+    }
+
+    private Map<String, Double> sortedMapAsc(Map<String, Double> map) {
+        return map.entrySet().stream().sorted(Map.Entry.<String, Double>comparingByValue())
+                .collect(Collectors.toMap(
+                        Map.Entry::getKey,
+                        Map.Entry::getValue,
+                        (e1, e2) -> e1,
+                        LinkedHashMap::new
+                ));
+    }
+
 }

@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface PerfumeRepository extends JpaRepository<Perfume, Long>, JpaSpecificationExecutor<Perfume> {
 
@@ -16,6 +17,9 @@ public interface PerfumeRepository extends JpaRepository<Perfume, Long>, JpaSpec
 
     @Query("select p from Perfume p where p.id = :perfumeId")
     Perfume findOneById(Long perfumeId);
+
+    @Query("select p from Perfume p where p.name = :perfumeName")
+    Optional<Perfume> findByPerfumeName(String perfumeName);
 
     @Query("select p.notes from Perfume p")
     List<String> findAllWithNotes();
@@ -27,4 +31,8 @@ public interface PerfumeRepository extends JpaRepository<Perfume, Long>, JpaSpec
     Page<Perfume> findAllWithNotesOrderByLength(String note1, String note2, String note3,
                                                 String note4, String note5, String note6,
                                                 String note7, String note8, Pageable pageable);
+
+    @Query("select p from Perfume p where p.notes like %:s% and p.notes like %:s1% and p.notes like %:s2%")
+    Page<Perfume> findAllByTop3Notes(String s, String s1, String s2, Pageable pageable);
+
 }
