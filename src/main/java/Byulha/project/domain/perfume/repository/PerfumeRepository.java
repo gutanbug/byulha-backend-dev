@@ -35,4 +35,6 @@ public interface PerfumeRepository extends JpaRepository<Perfume, Long>, JpaSpec
     @Query("select p from Perfume p where p.notes like %:s% and p.notes like %:s1% and p.notes like %:s2%")
     Page<Perfume> findAllByTop3Notes(String s, String s1, String s2, Pageable pageable);
 
+    @Query("select p from Perfume p where p.notes like %:s% and p.notes like %:s1%")
+    Page<Perfume> findAllByTop2Notes(String s, String s1, Pageable pageable);
 }
