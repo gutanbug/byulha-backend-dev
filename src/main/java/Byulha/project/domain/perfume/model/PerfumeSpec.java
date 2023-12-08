@@ -5,8 +5,27 @@ import org.springframework.data.jpa.domain.Specification;
 
 import javax.persistence.criteria.Order;
 import javax.persistence.criteria.Predicate;
+import javax.validation.constraints.Null;
 
 public class PerfumeSpec {
+
+    public static Specification<Perfume> withName(String name){
+        if(name==null || name.equals("null")){
+            return Specification.where(null);
+        }
+        String pattern = "%" + name + "%";
+        return(root,query,builder) ->
+                builder.like(root.get("name"),pattern);
+    }
+
+    public static Specification<Perfume> withCompany(String company){
+        if(company==null || company.equals("null")){
+            return Specification.where(null);
+        }
+        String pattern = "%" + company + "%";
+        return(root,query,builder) ->
+                builder.like(root.get("company"),pattern);
+    }
 
     public static Specification<Perfume> withForGender(String forGender) {
         if (forGender == null || forGender.equals("null")) {

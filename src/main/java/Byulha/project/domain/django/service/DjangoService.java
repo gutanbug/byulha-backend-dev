@@ -41,7 +41,11 @@ public class DjangoService {
 //            "category_name" : category_name
 //        }
 
-        String url = "http://127.0.0.1:8082/receive_string/";
+//        localhost에서 테스트할 때 ip 주소
+//        String url = "http://127.0.0.1:8082/receive_string/";
+
+//        서버에서 테스트할 때 ip 주소
+        String url = "http://172.20.0.5:8082/receive_string/";
 
         if (restTemplate.postForObject(url, entity, String.class) == null) {
             throw new CannotConnectToPythonServerException();
