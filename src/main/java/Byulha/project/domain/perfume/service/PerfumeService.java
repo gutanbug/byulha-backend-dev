@@ -2,6 +2,7 @@ package Byulha.project.domain.perfume.service;
 
 import Byulha.project.domain.perfume.model.PerfumeSpec;
 import Byulha.project.domain.perfume.model.dto.response.ResponsePerfumeDetailDto;
+import Byulha.project.domain.perfume.model.dto.response.ResponsePerfumeKeywordDto;
 import Byulha.project.domain.perfume.model.dto.response.ResponsePerfumeListDto;
 import Byulha.project.domain.perfume.model.entity.Perfume;
 import Byulha.project.domain.perfume.model.entity.PerfumeCategory;
@@ -30,12 +31,16 @@ public class PerfumeService {
     private final PerfumeCategoryRepository perfumeCategoryRepository;
     private final MessageSource messageSource;
 
-    public Page<ResponsePerfumeListDto> getPerfumeList(String forGender,
+    public Page<ResponsePerfumeListDto> getPerfumeList(String name,
+                                                       String company,
+                                                       String forGender,
                                                        String sillage,
                                                        String longevity,
                                                        boolean isDesc,
                                                        Pageable pageable) {
-        Specification<Perfume> spec = PerfumeSpec.withForGender(forGender);
+        Specification<Perfume> spec = PerfumeSpec.withName(name);
+        spec = spec.and(PerfumeSpec.withCompany(company));
+        spec = spec.and(PerfumeSpec.withForGender(forGender));
         spec = spec.and(PerfumeSpec.withSilage(sillage));
         spec = spec.and(PerfumeSpec.withLongevity(longevity));
         spec = spec.and(PerfumeSpec.withIsDesc(isDesc));
