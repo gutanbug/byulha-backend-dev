@@ -24,12 +24,10 @@ public class DjangoController {
     private final DjangoService djangoService;
 
     /**
-     * Django로 데이터 전송(프론트x)
-     *
-     * @param dto             요청 body
+     * Django로 데이터 전송 분위기 모델 테스트(프론트x)
      */
-    @PostMapping("/image-django")
-    public List<Map.Entry<String, String>> sendToFlask(@RequestBody RequestSendToDjangoDto dto) throws JsonProcessingException {
-        return djangoService.sendToDjango(dto);
+    @PostMapping("/image-django-new")
+    public List<Map.Entry<String, String>> sendToFlaskForMood(@RequestBody RequestSendToDjangoDto dto) throws JsonProcessingException {
+        return djangoService.sendToDjangoForMood(dto);
     }
 }
