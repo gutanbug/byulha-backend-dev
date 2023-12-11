@@ -47,6 +47,7 @@ public class ExcelParser {
             String sillage = "";
             String longevity = "";
             String price_value = "";
+            String gpt_response = "";
             String perfume_image = "";
             String thumbnail_image = "";
 
@@ -141,7 +142,14 @@ public class ExcelParser {
                 price_value = sortedData.get(0).getKey();
             }
 
-            // perfume image (String)
+
+            //GPT response
+            cell = row.getCell(9);
+            if (null != cell) {
+                gpt_response = cell.getStringCellValue();
+            }
+
+            // perfume image (String) , thumbnail image (String)
             cell = row.getCell(0);
             if (null != cell) {
                 String perfumeUrl = cell.getStringCellValue();
@@ -150,8 +158,6 @@ public class ExcelParser {
 
                 thumbnail_image = "https://fimgs.net/mdimg/perfume/m." + perfumeNum + ".jpg";
             }
-
-            // thumbnail image (String)
 
             Perfume perfume = Perfume.builder()
                     .perfumeUrl(link)
@@ -165,6 +171,7 @@ public class ExcelParser {
                     .priceValue(PriceValue.valueOf(price_value.toUpperCase().replace(" ", "_")))
                     .perfumeImage(perfume_image)
                     .thumbnailImage(thumbnail_image)
+                    .perfumeDetail(gpt_response)
                     .build();
 
             perfumeRepository.save(perfume);
