@@ -97,6 +97,8 @@ public class UserService {
 
     @Transactional
     public List<ResponsePerfumeAIListDto> uploadImage(Long userId, RequestUploadFileDto dto, Pageable pageable) throws Exception{
+
+        //TODO : 이미지를 통해 분위기를 3개 받고나면 분위기1등에 해당하는 AI 생성 이미지를 매핑하여 이미지에 대한 설명과 같이 출력해주는 것을 추가해야함.
         User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
 
         List<String> fileIdList = new ArrayList<>();
@@ -176,14 +178,23 @@ public class UserService {
                 .build();
         imageResultRepository.save(imageResult);
 
-        Page<Perfume> perfumesFromTop3Notes = perfumeRepository.findAllByTop3Notes(top3notes.get(0), top3notes.get(1), top3notes.get(2), pageable);
+        List<Perfume> perfumesFromNotes = new ArrayList<>();
 
-        if(perfumesFromTop3Notes.isEmpty()) {
-            perfumesFromTop3Notes = perfumeRepository.findAllByTop2Notes(top3notes.get(0), top3notes.get(1), pageable);
+        List<Perfume> perfumesFromTop3Notes = perfumeRepository.findAllByTop3Notes(top3notes.get(0), top3notes.get(1), top3notes.get(2));
+
+        perfumesFromNotes = perfumesFromTop3Notes;
+
+        if(perfumesFromTop3Notes.isEmpty() || perfumesFromTop3Notes.size() < 5) {
+            List<Perfume> perfumesFromTop2Notes = perfumeRepository.findAllByTop2Notes(top3notes.get(0), top3notes.get(1));
+            perfumesFromNotes.addAll(perfumesFromTop2Notes);
+            if(perfumesFromTop2Notes.isEmpty() || perfumesFromTop2Notes.size() < 5) {
+                List<Perfume> perfumesFromTop1Notes = perfumeRepository.findAllByTop1Notes(top3notes.get(0));
+                perfumesFromNotes.addAll(perfumesFromTop1Notes);
+            }
         }
 
         HashMap<String, Double> indexSumMap = new HashMap<>();
-        for(Perfume perfume : perfumesFromTop3Notes) {
+        for(Perfume perfume : perfumesFromNotes) {
             double indexSum = 0;
             for(String note : top3notes) {
                 String[] perfume_split = perfume.getNotes().split(",");
