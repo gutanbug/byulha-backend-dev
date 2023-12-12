@@ -11,11 +11,11 @@ import java.util.List;
 @Getter
 public class ResponsePerfumeAIListDto extends ResponsePerfumeListDto {
 
-    @Schema(description = "향수 분위기", example = "향수 분위기")
-    private final List<String> moods;
+    @Schema(description = "향수 노트", example = "Fruity,Woody")
+    private final List<String> notes;
 
-    public ResponsePerfumeAIListDto(Perfume perfume, MessageSource messageSource, String[] moods) {
+    public ResponsePerfumeAIListDto(Perfume perfume, MessageSource messageSource, List<String> notes) {
         super(perfume, messageSource);
-        this.moods = Arrays.asList(moods);
+        this.notes = notes;
     }
 }

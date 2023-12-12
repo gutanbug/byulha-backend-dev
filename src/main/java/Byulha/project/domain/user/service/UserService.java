@@ -15,6 +15,7 @@ import Byulha.project.domain.user.exception.UserNotFoundException;
 import Byulha.project.domain.user.exception.WrongPasswordException;
 import Byulha.project.domain.user.model.dto.request.RequestDeleteImageDto;
 import Byulha.project.domain.user.model.dto.response.ResponseLoginDto;
+import Byulha.project.domain.user.model.dto.response.ResponsePerfumeLastAIListDto;
 import Byulha.project.domain.user.model.dto.response.ResponseReissueDto;
 import Byulha.project.domain.user.model.dto.response.ResponseUserInfoDto;
 import Byulha.project.domain.user.model.entity.ImageResult;
@@ -96,7 +97,7 @@ public class UserService {
     }
 
     @Transactional
-    public List<ResponsePerfumeAIListDto> uploadImage(Long userId, RequestUploadFileDto dto, Pageable pageable) throws Exception{
+    public ResponsePerfumeLastAIListDto uploadImage(Long userId, RequestUploadFileDto dto, Pageable pageable) throws Exception{
 
         //TODO : 이미지를 통해 분위기를 3개 받고나면 분위기1등에 해당하는 AI 생성 이미지를 매핑하여 이미지에 대한 설명과 같이 출력해주는 것을 추가해야함.
         User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
@@ -223,7 +224,10 @@ public class UserService {
             fivePerfume.add(perfume);
         }
 
-        return fivePerfume.stream().map(perfume -> new ResponsePerfumeAIListDto(perfume, messageSource, category.split("-"))).collect(Collectors.toList());
+        List<ResponsePerfumeAIListDto> collect = fivePerfume.stream().map(perfume -> new ResponsePerfumeAIListDto(perfume, messageSource,
+                Arrays.asList(perfume.getNotes().split(",")))).collect(Collectors.toList());
+
+        return new ResponsePerfumeLastAIListDto(collect, Arrays.asList(category.split("-")));
     }
 
     @Transactional
