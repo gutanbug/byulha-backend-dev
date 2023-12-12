@@ -150,7 +150,7 @@ public class UserController {
      */
     @UserAuth
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE, value = "/upload/image")
-    public List<ResponsePerfumeAIListDto> uploadImage(AppAuthentication auth,
+    public ResponsePerfumeLastAIListDto uploadImage(AppAuthentication auth,
                                                       @Valid @ModelAttribute RequestUploadFileDto dto,
                                                       @ParameterObject Pageable pageable) throws Exception{
         return userService.uploadImage(auth.getUserId(), dto, pageable);
